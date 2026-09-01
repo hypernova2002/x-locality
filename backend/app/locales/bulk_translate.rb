@@ -22,7 +22,7 @@ module Backend
 
       def select_items(candidates_by_key, keys)
         items = keys.filter_map { |k| candidates_by_key[k] }
-        return Failure([:validation, "None of the selected keys are valid candidates"]) if items.empty?
+        return Failure([:validation, 'None of the selected keys are valid candidates']) if items.empty?
 
         Success(items)
       end

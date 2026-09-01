@@ -15,7 +15,7 @@ module Backend
       private
 
       def check_role(role)
-        return Failure([:validation, "role must be one of: #{ROLES.join(", ")}"]) unless ROLES.include?(role)
+        return Failure([:validation, "role must be one of: #{ROLES.join(', ')}"]) unless ROLES.include?(role)
 
         Success(true)
       end

@@ -13,7 +13,7 @@ module Backend
       private
 
       def check_not_system(locale)
-        return Failure([:forbidden, "System locales cannot be deleted"]) if locale.system
+        return Failure([:forbidden, 'System locales cannot be deleted']) if locale.system
 
         Success(true)
       end

@@ -7,9 +7,7 @@ module Backend
 
       attributes :source_term, :source_language, :target_term, :created_at, :updated_at
 
-      attribute :id do |term|
-        term.public_id
-      end
+      attribute :id, &:public_id
 
       # null means the mapping applies regardless of target locale.
       attribute :target_locale do |term|

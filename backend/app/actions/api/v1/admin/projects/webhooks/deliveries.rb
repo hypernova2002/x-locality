@@ -19,17 +19,20 @@ module Backend
 
                 def handle(request, response)
                   unless request.params.valid?
-                    return render_problem(response, status: 422, title: "Unprocessable Entity",
-                      errors: request.params.errors.to_h)
+                    return render_problem(response, status: 422, title: 'Unprocessable Entity',
+                                                    errors: request.params.errors.to_h)
                   end
 
                   webhook = project(request).project_webhooks_dataset.first(public_id: request.params[:id])
-                  return render_problem(response, status: 404, title: "Not Found", detail: "Webhook not found") unless webhook
+                  unless webhook
+                    return render_problem(response, status: 404, title: 'Not Found',
+                                                    detail: 'Webhook not found')
+                  end
 
                   dataset = webhook.webhook_deliveries_dataset.order(Sequel.desc(:created_at))
                   deliveries, total = paginate(dataset, request)
 
-                  response.headers["X-Total-Count"] = total.to_s
+                  response.headers['X-Total-Count'] = total.to_s
                   response.format = :json
                   response.body = Backend::Serializers::WebhookDeliverySerializer.new(deliveries).serialize
                 end

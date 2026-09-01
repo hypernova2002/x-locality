@@ -14,7 +14,7 @@ module Backend
           rows = project.translations_dataset.where(key: key).all
 
           if rows.empty?
-            failed << { key: key, reason: "not_found" }
+            failed << { key: key, reason: 'not_found' }
             next
           end
 

@@ -14,9 +14,9 @@ module Backend
           rows = project.translations_dataset.where(key: key).all
 
           if rows.empty?
-            skipped << { key: key, reason: "not_found" }
+            skipped << { key: key, reason: 'not_found' }
           elsif rows.any?(&:locked)
-            skipped << { key: key, reason: "locked" }
+            skipped << { key: key, reason: 'locked' }
           else
             rows.each(&:destroy)
             deleted << key

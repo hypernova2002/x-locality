@@ -30,7 +30,7 @@ module Backend
         existing = project.glossary_terms_dataset.first(
           source_term: source_term, source_language: source_language, target_locale_id: target_locale_id
         )
-        return Failure([:conflict, "A glossary entry for this term/language/locale already exists"]) if existing
+        return Failure([:conflict, 'A glossary entry for this term/language/locale already exists']) if existing
 
         Success(true)
       end

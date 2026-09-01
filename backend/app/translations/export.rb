@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "csv"
-require "json"
-require "zlib"
-require "stringio"
+require 'csv'
+require 'json'
+require 'zlib'
+require 'stringio'
 
 module Backend
   module Translations
@@ -18,7 +18,7 @@ module Backend
 
       def call(project:, format:)
         rows = project.translations_dataset.order(:key, :locale_id).eager(:locale).all.map { |t| row_for(t) }
-        content = format == "json" ? JSON.generate(rows) : to_csv(rows)
+        content = format == 'json' ? JSON.generate(rows) : to_csv(rows)
 
         { content: gzip(content), filename: "translations-#{project.slug}.#{format}.gz" }
       end

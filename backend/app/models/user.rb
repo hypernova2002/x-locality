@@ -1,18 +1,19 @@
 # frozen_string_literal: true
 
-require "bcrypt"
+require 'bcrypt'
 
 module Backend
   module Models
     class User < Sequel::Model
       include Concerns::HasPublicId
-      public_id_prefix "user"
+
+      public_id_prefix 'user'
 
       many_to_one :account
       one_to_many :project_memberships
 
       def owner?
-        role == "owner"
+        role == 'owner'
       end
 
       def password=(plaintext)

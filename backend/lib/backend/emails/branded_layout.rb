@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "cgi"
+require 'cgi'
 
 module Backend
   module Emails
@@ -23,7 +23,7 @@ module Backend
       end
 
       def from_header(account)
-        "#{from_name(account)} <#{Hanami.app["settings"].mail_from}>"
+        "#{from_name(account)} <#{Hanami.app['settings'].mail_from}>"
       end
 
       def logo_url(account)
@@ -32,7 +32,7 @@ module Backend
       end
 
       def default_logo_url
-        "#{Hanami.app["settings"].frontend_base_url}/xlocality-logo.svg"
+        "#{Hanami.app['settings'].frontend_base_url}/xlocality-logo.svg"
       end
 
       def html(account:, title:, body_html:)
@@ -57,7 +57,7 @@ module Backend
                         </td>
                       </tr>
                     </table>
-                    <p style="color:#71717a;font-size:12px;margin-top:16px;">Sent by #{sender} via x-locality</p>
+                    <p style="color:#71717a;font-size:12px;margin-top:16px;">Sent by #{sender} via XLocality</p>
                   </td>
                 </tr>
               </table>
@@ -67,7 +67,7 @@ module Backend
       end
 
       def text(account:, title:, body_text:)
-        "#{title}\n\n#{body_text}\n\n--\nSent by #{from_name(account)} via x-locality"
+        "#{title}\n\n#{body_text}\n\n--\nSent by #{from_name(account)} via XLocality"
       end
 
       def escape(str)

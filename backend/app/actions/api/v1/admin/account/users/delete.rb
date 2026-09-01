@@ -12,7 +12,10 @@ module Backend
 
                 def handle(request, response)
                   target = current_user(request).account.users_dataset.first(public_id: request.params[:id])
-                  return render_problem(response, status: 404, title: "Not Found", detail: "User not found") unless target
+                  unless target
+                    return render_problem(response, status: 404, title: 'Not Found',
+                                                    detail: 'User not found')
+                  end
 
                   result = Backend::Users::Delete.new.call(user: target)
 

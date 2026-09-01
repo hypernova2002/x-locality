@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "pagy"
+require 'pagy'
 
 module Backend
   module Actions
@@ -18,31 +18,37 @@ module Backend
                   public_id: request.params[:project_id],
                   account_id: current_user(request).account_id
                 )
-                return render_problem(response, status: 404, title: "Not Found", detail: "Project not found") unless project
+                unless project
+                  return render_problem(response, status: 404, title: 'Not Found',
+                                                  detail: 'Project not found')
+                end
 
                 role = project.effective_role_for(current_user(request))
                 # A project that exists but the user has no membership on
                 # renders identically to one that doesn't exist - no
                 # confirming its existence to someone without access.
-                return render_problem(response, status: 404, title: "Not Found", detail: "Project not found") unless role
+                unless role
+                  return render_problem(response, status: 404, title: 'Not Found',
+                                                  detail: 'Project not found')
+                end
 
-                request.env["backend.current_project"] = project
-                request.env["backend.project_role"] = role
+                request.env['backend.current_project'] = project
+                request.env['backend.project_role'] = role
               end
 
               def project(request)
-                request.env["backend.current_project"]
+                request.env['backend.current_project']
               end
 
               def project_role(request)
-                request.env["backend.project_role"]
+                request.env['backend.project_role']
               end
 
               def require_project_admin!(request, response)
-                return if project_role(request) == "admin"
+                return if project_role(request) == 'admin'
 
-                render_problem(response, status: 403, title: "Forbidden",
-                  detail: "This action requires project admin access")
+                render_problem(response, status: 403, title: 'Forbidden',
+                                         detail: 'This action requires project admin access')
               end
 
               # Offset/limit pagination via Pagy::Offset, for the simple

@@ -12,7 +12,10 @@ module Backend
 
                 def handle(request, response)
                   webhook = project(request).project_webhooks_dataset.first(public_id: request.params[:id])
-                  return render_problem(response, status: 404, title: "Not Found", detail: "Webhook not found") unless webhook
+                  unless webhook
+                    return render_problem(response, status: 404, title: 'Not Found',
+                                                    detail: 'Webhook not found')
+                  end
 
                   Backend::ProjectWebhooks::Delete.new.call(project_webhook: webhook)
                   response.status = 204

@@ -4,7 +4,8 @@ module Backend
   module Models
     class Project < Sequel::Model
       include Concerns::HasPublicId
-      public_id_prefix "proj"
+
+      public_id_prefix 'proj'
 
       many_to_one :account
       one_to_one :llm_config
@@ -20,7 +21,7 @@ module Backend
       one_to_many :project_webhooks
 
       def effective_role_for(user)
-        return "admin" if user.owner? && user.account_id == account_id
+        return 'admin' if user.owner? && user.account_id == account_id
 
         project_memberships_dataset.first(user_id: user.id)&.role
       end

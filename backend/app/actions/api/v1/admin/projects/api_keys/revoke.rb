@@ -12,7 +12,10 @@ module Backend
 
                 def handle(request, response)
                   api_key = project(request).api_keys_dataset.first(public_id: request.params[:id])
-                  return render_problem(response, status: 404, title: "Not Found", detail: "API key not found") unless api_key
+                  unless api_key
+                    return render_problem(response, status: 404, title: 'Not Found',
+                                                    detail: 'API key not found')
+                  end
 
                   api_key.update(revoked_at: Time.now)
 

@@ -15,7 +15,7 @@ module Backend
 
       def deliver(project_webhook)
         Backend::ProjectWebhooks::Jobs::DeliverWebhookJob.new.perform(
-          project_webhook.id, "test", { "message" => "This is a test webhook delivery from x-locality." }
+          project_webhook.id, 'test', { 'message' => 'This is a test webhook delivery from XLocality.' }
         )
         Success(true)
       rescue StandardError => e

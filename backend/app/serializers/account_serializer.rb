@@ -7,9 +7,7 @@ module Backend
 
       attributes :name, :timezone, :logo_url, :correspondence_name, :created_at
 
-      attribute :id do |account|
-        account.public_id
-      end
+      attribute :id, &:public_id
     end
   end
 end

@@ -1,30 +1,30 @@
 # frozen_string_literal: true
 
-require "anthropic"
+require 'anthropic'
 
 module Backend
   module Llm
     class AnthropicAdapter < Base
-      DEFAULT_MODEL = "claude-opus-5"
+      DEFAULT_MODEL = 'claude-opus-5'
 
       attr_reader :model
 
       TOOL = {
-        name: "record_translations",
-        description: "Record the translated text for each provided item, matched back by key.",
+        name: 'record_translations',
+        description: 'Record the translated text for each provided item, matched back by key.',
         input_schema: {
-          type: "object",
+          type: 'object',
           properties: {
             translations: {
-              type: "array",
+              type: 'array',
               items: {
-                type: "object",
+                type: 'object',
                 properties: {
-                  key: { type: "string", description: "Echo back the exact key of the source item." },
-                  translated_text: { type: "string" },
+                  key: { type: 'string', description: 'Echo back the exact key of the source item.' },
+                  translated_text: { type: 'string' },
                   detected_source_language: {
-                    type: "string",
-                    description: "ISO 639-1 code of the detected source language."
+                    type: 'string',
+                    description: 'ISO 639-1 code of the detected source language.'
                   }
                 },
                 required: %w[key translated_text detected_source_language],
@@ -32,7 +32,7 @@ module Backend
               }
             }
           },
-          required: ["translations"],
+          required: ['translations'],
           additionalProperties: false
         },
         strict: true
@@ -59,20 +59,20 @@ module Backend
           model: model,
           max_tokens: 4096,
           tools: [TOOL],
-          tool_choice: { type: "tool", name: TOOL[:name] },
-          messages: [{ role: "user", content: build_prompt(items: items, locale: locale) }]
+          tool_choice: { type: 'tool', name: TOOL[:name] },
+          messages: [{ role: 'user', content: build_prompt(items: items, locale: locale) }]
         )
 
         tool_use = response.content.find { |block| block.type == :tool_use }
-        raise "Anthropic did not return a tool call" unless tool_use
+        raise 'Anthropic did not return a tool call' unless tool_use
 
         usage = Usage.new(input_tokens: response.usage.input_tokens, output_tokens: response.usage.output_tokens)
 
-        tool_use.input["translations"].map do |entry|
+        tool_use.input['translations'].map do |entry|
           Result.new(
-            key: entry["key"],
-            translated_text: entry["translated_text"],
-            detected_source_language: entry["detected_source_language"],
+            key: entry['key'],
+            translated_text: entry['translated_text'],
+            detected_source_language: entry['detected_source_language'],
             usage: usage
           )
         end

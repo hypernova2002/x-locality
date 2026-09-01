@@ -14,8 +14,8 @@ module Backend
 
               def handle(request, response)
                 unless request.params.valid?
-                  return render_problem(response, status: 422, title: "Unprocessable Entity",
-                    errors: request.params.errors.to_h)
+                  return render_problem(response, status: 422, title: 'Unprocessable Entity',
+                                                  errors: request.params.errors.to_h)
                 end
 
                 result = Backend::Auth::Login.new.call(
@@ -27,8 +27,8 @@ module Backend
                 in Success(user)
                   token = Backend::Jwt.encode(
                     { user_id: user.id },
-                    secret: Hanami.app["settings"].jwt_secret,
-                    ttl: Hanami.app["settings"].jwt_access_token_ttl
+                    secret: Hanami.app['settings'].jwt_secret,
+                    ttl: Hanami.app['settings'].jwt_access_token_ttl
                   )
 
                   response.format = :json

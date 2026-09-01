@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require 'spec_helper'
 
 RSpec.describe Backend::Locales::Delete do
-  describe "#call" do
-    it "deletes a custom locale" do
+  describe '#call' do
+    it 'deletes a custom locale' do
       locale = create(:locale, system: false)
 
       result = described_class.new.call(locale: locale)
@@ -13,7 +13,7 @@ RSpec.describe Backend::Locales::Delete do
       expect(Backend::Models::Locale[locale.id]).to be_nil
     end
 
-    it "fails with :forbidden for a system locale, and does not delete it" do
+    it 'fails with :forbidden for a system locale, and does not delete it' do
       locale = create(:locale, system: true)
 
       result = described_class.new.call(locale: locale)

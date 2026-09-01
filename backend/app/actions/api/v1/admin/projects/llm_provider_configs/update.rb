@@ -22,12 +22,15 @@ module Backend
 
                 def handle(request, response)
                   unless request.params.valid?
-                    return render_problem(response, status: 422, title: "Unprocessable Entity",
-                      errors: request.params.errors.to_h)
+                    return render_problem(response, status: 422, title: 'Unprocessable Entity',
+                                                    errors: request.params.errors.to_h)
                   end
 
                   config = project(request).llm_provider_configs_dataset.first(public_id: request.params[:id])
-                  return render_problem(response, status: 404, title: "Not Found", detail: "LLM provider config not found") unless config
+                  unless config
+                    return render_problem(response, status: 404, title: 'Not Found',
+                                                    detail: 'LLM provider config not found')
+                  end
 
                   updates = request.params.to_h.slice(:name, :description, :provider, :model, :api_key)
                   result = Backend::LlmProviderConfigs::Update.new.call(config: config, updates: updates)

@@ -20,7 +20,7 @@ module Backend
 
       def check_key_available(project, key)
         if project.locales_dataset.first(key: key)
-          return Failure([:conflict, "A locale with this key already exists on this project"])
+          return Failure([:conflict, 'A locale with this key already exists on this project'])
         end
 
         Success(true)

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sidekiq"
+require 'sidekiq'
 
 module Backend
   module LlmConfigs
@@ -9,7 +9,7 @@ module Backend
         include Sidekiq::Job
 
         def perform(project_id, trace)
-          base_url = Hanami.app["settings"].langfuse_base_url
+          base_url = Hanami.app['settings'].langfuse_base_url
           return if base_url.to_s.empty?
 
           project = Backend::Models::Project[project_id]

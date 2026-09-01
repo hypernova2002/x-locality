@@ -6,9 +6,9 @@ module Backend
       config = project.llm_config&.active_llm_provider_config
 
       case config&.provider
-      when "anthropic"
+      when 'anthropic'
         AnthropicAdapter.new(api_key: config.api_key, model: config.llm_model)
-      when "gemini"
+      when 'gemini'
         GeminiAdapter.new(api_key: config.api_key, model: config.llm_model)
       else
         raise "Unsupported LLM provider: #{config&.provider.inspect}"
@@ -17,9 +17,9 @@ module Backend
 
     def self.list_models(provider:, api_key:)
       case provider
-      when "anthropic"
+      when 'anthropic'
         AnthropicAdapter.list_models(api_key: api_key)
-      when "gemini"
+      when 'gemini'
         GeminiAdapter.list_models(api_key: api_key)
       else
         raise "Unsupported LLM provider: #{provider.inspect}"

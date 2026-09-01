@@ -4,7 +4,8 @@ module Backend
   module Models
     class ProjectWebhook < Sequel::Model
       include Concerns::HasPublicId
-      public_id_prefix "whk"
+
+      public_id_prefix 'whk'
 
       EVENT_TYPES = %w[translation.batch_completed budget.threshold_crossed].freeze
 

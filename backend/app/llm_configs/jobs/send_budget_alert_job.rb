@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "sidekiq"
+require 'sidekiq'
 
 module Backend
   module LlmConfigs

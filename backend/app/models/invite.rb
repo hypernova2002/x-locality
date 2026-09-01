@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
-require "securerandom"
-require "digest"
+require 'securerandom'
+require 'digest'
 
 module Backend
   module Models
     class Invite < Sequel::Model
       include Concerns::HasPublicId
-      public_id_prefix "invite"
+
+      public_id_prefix 'invite'
 
       TTL = 7 * 24 * 60 * 60 # 7 days
 

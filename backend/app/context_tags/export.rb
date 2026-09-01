@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "csv"
-require "json"
-require "zlib"
-require "stringio"
+require 'csv'
+require 'json'
+require 'zlib'
+require 'stringio'
 
 module Backend
   module ContextTags
@@ -12,7 +12,7 @@ module Backend
 
       def call(project:, format:)
         rows = project.context_tags_dataset.order(:key).all.map { |t| row_for(t) }
-        content = format == "json" ? JSON.generate(rows) : to_csv(rows)
+        content = format == 'json' ? JSON.generate(rows) : to_csv(rows)
 
         { content: gzip(content), filename: "context-tags-#{project.slug}.#{format}.gz" }
       end

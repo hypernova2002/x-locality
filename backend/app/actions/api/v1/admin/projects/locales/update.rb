@@ -18,12 +18,15 @@ module Backend
 
                 def handle(request, response)
                   unless request.params.valid?
-                    return render_problem(response, status: 422, title: "Unprocessable Entity",
-                      errors: request.params.errors.to_h)
+                    return render_problem(response, status: 422, title: 'Unprocessable Entity',
+                                                    errors: request.params.errors.to_h)
                   end
 
                   locale = project(request).locales_dataset.first(public_id: request.params[:id])
-                  return render_problem(response, status: 404, title: "Not Found", detail: "Locale not found") unless locale
+                  unless locale
+                    return render_problem(response, status: 404, title: 'Not Found',
+                                                    detail: 'Locale not found')
+                  end
 
                   updates = request.params.to_h.slice(:style_tone_text, :general_description, :target_language)
                   result = Backend::Locales::Update.new.call(locale: locale, updates: updates)

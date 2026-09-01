@@ -10,7 +10,7 @@ module Backend
         user = nil
         Backend::Models::User.db.transaction do
           user = Backend::Models::User.create(
-            account_id: invite.account_id, email: invite.email, password: password, role: "member"
+            account_id: invite.account_id, email: invite.email, password: password, role: 'member'
           )
           Backend::Models::ProjectMembership.create(project_id: invite.project_id, user_id: user.id, role: invite.role)
           invite.update(accepted_at: Time.now)
@@ -23,17 +23,17 @@ module Backend
 
       def find_invite(token)
         invite = Backend::Models::Invite.find_by_token(token)
-        return Failure([:not_found, "Invite not found"]) unless invite
+        return Failure([:not_found, 'Invite not found']) unless invite
 
         Success(invite)
       end
 
       def check_available(invite)
-        return Failure([:validation, "This invite has already been accepted"]) if invite.accepted?
-        return Failure([:validation, "This invite has expired"]) if invite.expired?
+        return Failure([:validation, 'This invite has already been accepted']) if invite.accepted?
+        return Failure([:validation, 'This invite has expired']) if invite.expired?
 
         if Backend::Models::User.first(email: invite.email)
-          return Failure([:conflict, "An account already exists for this email"])
+          return Failure([:conflict, 'An account already exists for this email'])
         end
 
         Success(true)

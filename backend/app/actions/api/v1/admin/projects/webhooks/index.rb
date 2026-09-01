@@ -18,13 +18,13 @@ module Backend
 
                 def handle(request, response)
                   unless request.params.valid?
-                    return render_problem(response, status: 422, title: "Unprocessable Entity",
-                      errors: request.params.errors.to_h)
+                    return render_problem(response, status: 422, title: 'Unprocessable Entity',
+                                                    errors: request.params.errors.to_h)
                   end
 
                   webhooks, total = paginate(project(request).project_webhooks_dataset.order(:created_at), request)
 
-                  response.headers["X-Total-Count"] = total.to_s
+                  response.headers['X-Total-Count'] = total.to_s
                   response.format = :json
                   response.body = Backend::Serializers::ProjectWebhookSerializer.new(webhooks).serialize
                 end

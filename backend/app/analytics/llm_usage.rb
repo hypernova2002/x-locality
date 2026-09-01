@@ -55,7 +55,7 @@ module Backend
           .map do |date, group|
             successful = group.select(&:success)
             {
-              date: date.strftime("%Y-%m-%d"),
+              date: date.strftime('%Y-%m-%d'),
               input_tokens: successful.sum(&:input_tokens),
               output_tokens: successful.sum(&:output_tokens),
               failed_calls: group.size - successful.size

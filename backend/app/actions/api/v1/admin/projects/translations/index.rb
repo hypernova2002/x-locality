@@ -24,8 +24,8 @@ module Backend
 
                 def handle(request, response)
                   unless request.params.valid?
-                    return render_problem(response, status: 422, title: "Unprocessable Entity",
-                      errors: request.params.errors.to_h)
+                    return render_problem(response, status: 422, title: 'Unprocessable Entity',
+                                                    errors: request.params.errors.to_h)
                   end
 
                   result = Backend::Translations::ListGrouped.new.call(
@@ -44,7 +44,7 @@ module Backend
 
                   case result
                   in Success(data)
-                    response.headers["X-Total-Count"] = data[:total].to_s
+                    response.headers['X-Total-Count'] = data[:total].to_s
                     response.format = :json
                     response.body = data[:groups].to_json
                   in Failure[code, detail]

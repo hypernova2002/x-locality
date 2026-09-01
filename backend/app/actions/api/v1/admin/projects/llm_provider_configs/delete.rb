@@ -12,7 +12,10 @@ module Backend
 
                 def handle(request, response)
                   config = project(request).llm_provider_configs_dataset.first(public_id: request.params[:id])
-                  return render_problem(response, status: 404, title: "Not Found", detail: "LLM provider config not found") unless config
+                  unless config
+                    return render_problem(response, status: 404, title: 'Not Found',
+                                                    detail: 'LLM provider config not found')
+                  end
 
                   Backend::LlmProviderConfigs::Delete.new.call(config: config)
                   response.status = 204

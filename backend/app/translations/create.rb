@@ -20,7 +20,7 @@ module Backend
 
         results = target_locale_keys.to_h do |locale_key|
           [locale_key, translate_for_locale(project, locales[locale_key], items, context_tags_by_key,
-            glossary_terms, force)]
+                                            glossary_terms, force)]
         end
 
         notify_translation_webhooks(project, target_locale_keys, results)
@@ -33,7 +33,7 @@ module Backend
       def check_llm_configured(project)
         unless project.llm_config&.active_llm_provider_config&.api_key_configured?
           return Failure([:unconfigured,
-            "This project has no LLM provider configured - set a provider/API key in its LLM settings first"])
+                          'This project has no LLM provider configured - set a provider/API key in its LLM settings first'])
         end
 
         Success(true)
@@ -42,7 +42,7 @@ module Backend
       def check_unit_limit(unit_count, limit)
         if unit_count > limit
           return Failure([:validation,
-            "#{unit_count} translation units (items x locales) exceeds the synchronous limit of #{limit}"])
+                          "#{unit_count} translation units (items x locales) exceeds the synchronous limit of #{limit}"])
         end
 
         Success(true)
@@ -54,9 +54,9 @@ module Backend
 
         start_of_month = Date.new(Date.today.year, Date.today.month, 1)
         events = Backend::Models::LlmUsageEvent
-          .where(project_id: project.id, success: true)
-          .where { created_at >= start_of_month }
-          .all
+                 .where(project_id: project.id, success: true)
+                 .where { created_at >= start_of_month }
+                 .all
 
         tokens_used = events.sum { |e| e.input_tokens + e.output_tokens }
         cost_used = events.filter_map do |e|
@@ -67,12 +67,13 @@ module Backend
 
         if config.monthly_token_limit && tokens_used >= config.monthly_token_limit
           return Failure([:budget_exceeded,
-            "Monthly token limit (#{config.monthly_token_limit}) reached (#{tokens_used} used this month)"])
+                          "Monthly token limit (#{config.monthly_token_limit}) reached (#{tokens_used} used this month)"])
         end
 
         if config.monthly_cost_limit_usd && cost_used >= config.monthly_cost_limit_usd.to_f
           return Failure([:budget_exceeded,
-            "Monthly cost limit ($#{config.monthly_cost_limit_usd}) reached ($#{format('%.2f', cost_used)} used this month)"])
+                          "Monthly cost limit ($#{config.monthly_cost_limit_usd}) reached ($#{format('%.2f',
+                                                                                                     cost_used)} used this month)"])
         end
 
         Success(true)
@@ -84,7 +85,7 @@ module Backend
       def maybe_send_budget_alert(project, config, tokens_used:, cost_used:)
         return unless config.alert_email && config.alert_threshold_percent
 
-        current_month = Date.today.strftime("%Y-%m")
+        current_month = Date.today.strftime('%Y-%m')
         return if config.alert_sent_for_month == current_month
 
         token_pct = config.monthly_token_limit ? (tokens_used.to_f / config.monthly_token_limit * 100) : 0
@@ -94,10 +95,10 @@ module Backend
         config.update(alert_sent_for_month: current_month)
         Backend::LlmConfigs::Jobs::SendBudgetAlertJob.perform_async(project.id, tokens_used, cost_used)
         Backend::ProjectWebhooks::Notify.new.call(
-          project: project, event_type: "budget.threshold_crossed",
+          project: project, event_type: 'budget.threshold_crossed',
           payload: {
-            "tokens_used" => tokens_used, "cost_used" => cost_used,
-            "threshold_percent" => config.alert_threshold_percent
+            'tokens_used' => tokens_used, 'cost_used' => cost_used,
+            'threshold_percent' => config.alert_threshold_percent
           }
         )
       end
@@ -107,13 +108,13 @@ module Backend
       # for a webhook subscriber, whether triggered externally or via an
       # admin regenerate/bulk_regenerate.
       def notify_translation_webhooks(project, target_locale_keys, results)
-        completed = results.values.sum { |outcomes| outcomes.values.count { |o| o.status == "completed" } }
-        failed = results.values.sum { |outcomes| outcomes.values.count { |o| o.status == "failed" } }
+        completed = results.values.sum { |outcomes| outcomes.values.count { |o| o.status == 'completed' } }
+        failed = results.values.sum { |outcomes| outcomes.values.count { |o| o.status == 'failed' } }
 
         Backend::ProjectWebhooks::Notify.new.call(
-          project: project, event_type: "translation.batch_completed",
+          project: project, event_type: 'translation.batch_completed',
           payload: {
-            "target_locales" => target_locale_keys, "completed" => completed, "failed" => failed
+            'target_locales' => target_locale_keys, 'completed' => completed, 'failed' => failed
           }
         )
       end
@@ -172,8 +173,8 @@ module Backend
 
       def translate_for_locale(project, locale, items, context_tags_by_key, glossary_terms, force)
         existing = project.translations_dataset
-          .where(locale_id: locale.id, key: items.map { |i| i[:key] })
-          .all.to_h { |t| [t.key, t] }
+                          .where(locale_id: locale.id, key: items.map { |i| i[:key] })
+                          .all.to_h { |t| [t.key, t] }
 
         to_generate = []
         outcomes = {}
@@ -184,7 +185,7 @@ module Backend
 
           if translation && !force && unchanged?(translation, item, tags)
             outcomes[item[:key]] = TranslationOutcome.new(
-              status: "completed", translated_text: translation.translated_text,
+              status: 'completed', translated_text: translation.translated_text,
               detected_language: translation.detected_language, cached: true
             )
           else
@@ -199,7 +200,7 @@ module Backend
       end
 
       def unchanged?(translation, item, tags)
-        translation.status == "completed" &&
+        translation.status == 'completed' &&
           translation.source_text == item[:source_text] &&
           translation.context_tags.map(&:key).sort == tags.map(&:key).sort
       end
@@ -213,8 +214,8 @@ module Backend
         rescue StandardError => e
           duration_ms = elapsed_ms(started_at)
           to_generate.each do |item|
-            outcomes[item[:key]] = TranslationOutcome.new(status: "failed", translated_text: nil,
-              detected_language: nil, cached: false)
+            outcomes[item[:key]] = TranslationOutcome.new(status: 'failed', translated_text: nil,
+                                                          detected_language: nil, cached: false)
           end
           record_failed_usage(project, locale, adapter, to_generate.size, e.message, duration_ms)
           trace_to_langfuse(project, adapter, to_generate, nil, duration_ms, error_message: e.message)
@@ -231,14 +232,14 @@ module Backend
         to_generate.each do |item|
           result = results_by_key[item[:key]]
           unless result
-            outcomes[item[:key]] = TranslationOutcome.new(status: "failed", translated_text: nil,
-              detected_language: nil, cached: false)
+            outcomes[item[:key]] = TranslationOutcome.new(status: 'failed', translated_text: nil,
+                                                          detected_language: nil, cached: false)
             next
           end
 
           translation = persist_translation(project, locale, item, result, adapter.model)
           outcomes[item[:key]] = TranslationOutcome.new(
-            status: "completed", translated_text: translation.translated_text,
+            status: 'completed', translated_text: translation.translated_text,
             detected_language: translation.detected_language, cached: false
           )
         end
@@ -297,15 +298,15 @@ module Backend
         Backend::LlmConfigs::Jobs::SendLangfuseTraceJob.perform_async(
           project.id,
           {
-            "model" => adapter.model,
-            "input" => items.map { |i| { "key" => i[:key], "source_text" => i[:source_text] } },
-            "output" => results&.map { |r| { "key" => r.key, "translated_text" => r.translated_text } },
-            "input_tokens" => usage&.input_tokens,
-            "output_tokens" => usage&.output_tokens,
-            "duration_ms" => duration_ms,
-            "success" => error_message.nil?,
-            "error_message" => error_message,
-            "ended_at" => Time.now.utc.iso8601(3)
+            'model' => adapter.model,
+            'input' => items.map { |i| { 'key' => i[:key], 'source_text' => i[:source_text] } },
+            'output' => results&.map { |r| { 'key' => r.key, 'translated_text' => r.translated_text } },
+            'input_tokens' => usage&.input_tokens,
+            'output_tokens' => usage&.output_tokens,
+            'duration_ms' => duration_ms,
+            'success' => error_message.nil?,
+            'error_message' => error_message,
+            'ended_at' => Time.now.utc.iso8601(3)
           }
         )
       end
@@ -321,8 +322,8 @@ module Backend
             source_language: item[:source_language],
             detected_language: result.detected_source_language,
             translated_text: result.translated_text,
-            status: "completed",
-            generated_by: "llm",
+            status: 'completed',
+            generated_by: 'llm',
             model_used: model_used,
             llm_provider: llm_provider
           )
@@ -335,8 +336,8 @@ module Backend
             source_language: item[:source_language],
             detected_language: result.detected_source_language,
             translated_text: result.translated_text,
-            status: "completed",
-            generated_by: "llm",
+            status: 'completed',
+            generated_by: 'llm',
             model_used: model_used,
             llm_provider: llm_provider
           )
@@ -350,7 +351,7 @@ module Backend
         translation.record_version!(
           previous_value: previous_value,
           new_value: result.translated_text,
-          changed_by_type: "llm"
+          changed_by_type: 'llm'
         )
 
         translation

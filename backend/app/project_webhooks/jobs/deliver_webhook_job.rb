@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require "sidekiq"
-require "net/http"
-require "openssl"
-require "json"
+require 'sidekiq'
+require 'net/http'
+require 'openssl'
+require 'json'
 
 module Backend
   module ProjectWebhooks
@@ -16,7 +16,7 @@ module Backend
           return unless webhook&.enabled
 
           body = { event: event_type, data: payload, timestamp: Time.now.utc.iso8601 }.to_json
-          signature = OpenSSL::HMAC.hexdigest("SHA256", webhook.secret, body)
+          signature = OpenSSL::HMAC.hexdigest('SHA256', webhook.secret, body)
 
           response_status = nil
           error_message = nil
@@ -25,13 +25,13 @@ module Backend
           begin
             uri = URI.parse(webhook.url)
             request = Net::HTTP::Post.new(uri)
-            request["Content-Type"] = "application/json"
-            request["X-Webhook-Event"] = event_type
-            request["X-Webhook-Signature"] = "sha256=#{signature}"
+            request['Content-Type'] = 'application/json'
+            request['X-Webhook-Event'] = event_type
+            request['X-Webhook-Signature'] = "sha256=#{signature}"
             request.body = body
 
-            response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == "https",
-              open_timeout: 5, read_timeout: 10) { |http| http.request(request) }
+            response = Net::HTTP.start(uri.host, uri.port, use_ssl: uri.scheme == 'https',
+                                                           open_timeout: 5, read_timeout: 10) { |http| http.request(request) }
 
             response_status = response.code.to_i
             success = response.is_a?(Net::HTTPSuccess)

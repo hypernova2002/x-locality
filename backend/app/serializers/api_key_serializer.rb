@@ -10,9 +10,7 @@ module Backend
 
       attributes :name, :key, :last_used_at, :revoked_at, :created_at
 
-      attribute :id do |api_key|
-        api_key.public_id
-      end
+      attribute :id, &:public_id
     end
   end
 end

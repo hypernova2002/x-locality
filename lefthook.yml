@@ -1,0 +1,17 @@
+pre-commit:
+  parallel: true
+  commands:
+    rubocop:
+      root: "backend/"
+      glob: "*.rb"
+      run: docker compose run --rm --no-deps -T api bundle exec rubocop --force-exclusion {staged_files}
+
+    frontend-oxlint:
+      root: "frontend/"
+      glob: "*.{js,ts,vue}"
+      run: docker compose run --rm -T web npx oxlint {staged_files}
+
+    frontend-eslint:
+      root: "frontend/"
+      glob: "*.{js,ts,vue}"
+      run: docker compose run --rm -T web npx eslint {staged_files}

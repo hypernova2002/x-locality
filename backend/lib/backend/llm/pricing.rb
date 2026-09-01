@@ -9,11 +9,11 @@ module Backend
     # only token counts.
     module Pricing
       RATES = {
-        "claude-opus-5" => { input: 15.0 / 1_000_000, output: 75.0 / 1_000_000 },
-        "claude-sonnet-5" => { input: 3.0 / 1_000_000, output: 15.0 / 1_000_000 },
-        "claude-haiku-4-5" => { input: 1.0 / 1_000_000, output: 5.0 / 1_000_000 },
-        "gemini-3.5-flash" => { input: 0.075 / 1_000_000, output: 0.30 / 1_000_000 },
-        "gemini-3.5-pro" => { input: 1.25 / 1_000_000, output: 5.0 / 1_000_000 }
+        'claude-opus-5' => { input: 15.0 / 1_000_000, output: 75.0 / 1_000_000 },
+        'claude-sonnet-5' => { input: 3.0 / 1_000_000, output: 15.0 / 1_000_000 },
+        'claude-haiku-4-5' => { input: 1.0 / 1_000_000, output: 5.0 / 1_000_000 },
+        'gemini-3.5-flash' => { input: 0.075 / 1_000_000, output: 0.30 / 1_000_000 },
+        'gemini-3.5-pro' => { input: 1.25 / 1_000_000, output: 5.0 / 1_000_000 }
       }.freeze
 
       def self.cost(model:, input_tokens:, output_tokens:)

@@ -7,9 +7,7 @@ module Backend
 
       attributes :name, :slug, :created_at, :updated_at
 
-      attribute :id do |project|
-        project.public_id
-      end
+      attribute :id, &:public_id
 
       # params: { current_user: } - omitted (nil) when not provided. Alba
       # attribute blocks run via instance_exec with only the object as an

@@ -19,13 +19,13 @@ module Backend
 
                 def handle(request, response)
                   unless request.params.valid?
-                    return render_problem(response, status: 422, title: "Unprocessable Entity",
-                      errors: request.params.errors.to_h)
+                    return render_problem(response, status: 422, title: 'Unprocessable Entity',
+                                                    errors: request.params.errors.to_h)
                   end
 
                   term = project(request).glossary_terms_dataset.first(public_id: request.params[:id])
                   unless term
-                    return render_problem(response, status: 404, title: "Not Found", detail: "Glossary term not found")
+                    return render_problem(response, status: 404, title: 'Not Found', detail: 'Glossary term not found')
                   end
 
                   updates = request.params.to_h.slice(:source_term, :source_language, :target_term, :target_locale_key)

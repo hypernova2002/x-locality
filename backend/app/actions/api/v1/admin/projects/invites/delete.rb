@@ -12,7 +12,10 @@ module Backend
 
                 def handle(request, response)
                   invite = project(request).invites_dataset.first(public_id: request.params[:id])
-                  return render_problem(response, status: 404, title: "Not Found", detail: "Invite not found") unless invite
+                  unless invite
+                    return render_problem(response, status: 404, title: 'Not Found',
+                                                    detail: 'Invite not found')
+                  end
 
                   Backend::Invites::Delete.new.call(invite: invite)
                   response.status = 204

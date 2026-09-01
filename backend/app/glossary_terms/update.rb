@@ -39,7 +39,7 @@ module Backend
           source_term: source_term, source_language: source_language, target_locale_id: target_locale_id
         )
         if existing && existing.id != glossary_term.id
-          return Failure([:conflict, "A glossary entry for this term/language/locale already exists"])
+          return Failure([:conflict, 'A glossary entry for this term/language/locale already exists'])
         end
 
         Success(true)

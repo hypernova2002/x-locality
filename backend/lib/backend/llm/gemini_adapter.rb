@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "gemini"
+require 'gemini'
 
 module Backend
   module Llm
@@ -9,25 +9,25 @@ module Backend
       # translation. Confirmed as a real, stable (non-preview) model id
       # against https://ai.google.dev/gemini-api/docs/models. Override via
       # a project's llm_model for anything else.
-      DEFAULT_MODEL = "gemini-3.5-flash"
+      DEFAULT_MODEL = 'gemini-3.5-flash'
 
       RESPONSE_SCHEMA = {
-        type: "object",
+        type: 'object',
         properties: {
           translations: {
-            type: "array",
+            type: 'array',
             items: {
-              type: "object",
+              type: 'object',
               properties: {
-                key: { type: "string" },
-                translated_text: { type: "string" },
-                detected_source_language: { type: "string" }
+                key: { type: 'string' },
+                translated_text: { type: 'string' },
+                detected_source_language: { type: 'string' }
               },
               required: %w[key translated_text detected_source_language]
             }
           }
         },
-        required: ["translations"]
+        required: ['translations']
       }.freeze
 
       attr_reader :model
@@ -43,8 +43,8 @@ module Backend
       def self.list_models(api_key:)
         client = Gemini::Client.new(api_key)
         response = client.models.list
-        (response["models"] || []).map do |m|
-          { id: m["name"].to_s.sub("models/", ""), name: m["displayName"] || m["name"] }
+        (response['models'] || []).map do |m|
+          { id: m['name'].to_s.sub('models/', ''), name: m['displayName'] || m['name'] }
         end
       end
 
@@ -54,7 +54,7 @@ module Backend
         response = @client.generate_content(
           build_prompt(items: items, locale: locale),
           model: model,
-          response_mime_type: "application/json",
+          response_mime_type: 'application/json',
           response_schema: RESPONSE_SCHEMA
         )
 
@@ -62,11 +62,11 @@ module Backend
 
         usage = Usage.new(input_tokens: response.prompt_tokens, output_tokens: response.completion_tokens)
 
-        response.json["translations"].map do |entry|
+        response.json['translations'].map do |entry|
           Result.new(
-            key: entry["key"],
-            translated_text: entry["translated_text"],
-            detected_source_language: entry["detected_source_language"],
+            key: entry['key'],
+            translated_text: entry['translated_text'],
+            detected_source_language: entry['detected_source_language'],
             usage: usage
           )
         end

@@ -15,8 +15,8 @@ module Backend
 
             def handle(request, response)
               unless request.params.valid?
-                return render_problem(response, status: 422, title: "Unprocessable Entity",
-                  errors: request.params.errors.to_h)
+                return render_problem(response, status: 422, title: 'Unprocessable Entity',
+                                                errors: request.params.errors.to_h)
               end
 
               result = Backend::Translations::List.new.call(
@@ -30,9 +30,8 @@ module Backend
               case result
               in Success(data)
                 if data[:has_more]
-                  next_url = request.base_url + request.path + "?" +
-                    Rack::Utils.build_query(request.params.to_h.merge(after: data[:records].last.id))
-                  response.headers["Link"] = "<#{next_url}>; rel=\"next\""
+                  next_url = "#{request.base_url}#{request.path}?#{Rack::Utils.build_query(request.params.to_h.merge(after: data[:records].last.id))}"
+                  response.headers['Link'] = "<#{next_url}>; rel=\"next\""
                 end
 
                 response.format = :json

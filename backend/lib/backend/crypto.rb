@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require "openssl"
-require "base64"
+require 'openssl'
+require 'base64'
 
 module Backend
   # AES-256-GCM, used to encrypt project-level LLM provider API keys at
@@ -16,7 +16,7 @@ module Backend
     def encrypt(plaintext, key:)
       return nil if plaintext.nil?
 
-      cipher = OpenSSL::Cipher.new("aes-256-gcm")
+      cipher = OpenSSL::Cipher.new('aes-256-gcm')
       cipher.encrypt
       cipher.key = Base64.strict_decode64(key)
       iv = cipher.random_iv
@@ -32,7 +32,7 @@ module Backend
       auth_tag = raw[IV_LENGTH, AUTH_TAG_LENGTH]
       ciphertext = raw[(IV_LENGTH + AUTH_TAG_LENGTH)..]
 
-      cipher = OpenSSL::Cipher.new("aes-256-gcm")
+      cipher = OpenSSL::Cipher.new('aes-256-gcm')
       cipher.decrypt
       cipher.key = Base64.strict_decode64(key)
       cipher.iv = iv

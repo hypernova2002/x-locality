@@ -6,11 +6,9 @@ module Backend
       include Alba::Resource
 
       attributes :key, :target_language, :style_tone_text, :general_description,
-        :system, :created_at, :updated_at
+                 :system, :created_at, :updated_at
 
-      attribute :id do |locale|
-        locale.public_id
-      end
+      attribute :id, &:public_id
     end
   end
 end

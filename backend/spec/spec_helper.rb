@@ -1,22 +1,21 @@
 # frozen_string_literal: true
 
-require "pathname"
 SPEC_ROOT = Pathname(__dir__).realpath.freeze
 
-ENV["HANAMI_ENV"] ||= "test"
+ENV['HANAMI_ENV'] ||= 'test'
 # Same Postgres instance/credentials as dev - just a different database, so
 # specs never touch dev data.
-ENV["DATABASE_URL"] = ENV.fetch("DATABASE_URL").sub(/x_locality_development\z/, "x_locality_test")
+ENV['DATABASE_URL'] = ENV.fetch('DATABASE_URL').sub(/x_locality_development\z/, 'x_locality_test')
 
-require "hanami/prepare"
+require 'hanami/prepare'
 
 # hanami/prepare sets up the app but leaves providers to start lazily on
 # first container resolution. Every spec touches the DB (directly or via
 # factories), so start it eagerly once here rather than relying on the
 # first example to trigger it.
-Hanami.app["db"]
+Hanami.app['db']
 
-SPEC_ROOT.glob("support/**/*.rb").sort.each { |f| require f }
+SPEC_ROOT.glob('support/**/*.rb').sort.each { |f| require f }
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|
@@ -29,7 +28,7 @@ RSpec.configure do |config|
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
   config.filter_run_when_matching :focus
-  config.example_status_persistence_file_path = "tmp/rspec_examples.txt" if SPEC_ROOT.join("../tmp").directory?
+  config.example_status_persistence_file_path = 'tmp/rspec_examples.txt' if SPEC_ROOT.join('../tmp').directory?
   config.disable_monkey_patching!
   config.order = :random
   Kernel.srand config.seed

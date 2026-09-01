@@ -12,16 +12,19 @@ module Backend
             class Show < Backend::Action
               def handle(request, response)
                 invite = Backend::Models::Invite.find_by_token(request.params[:token])
-                return render_problem(response, status: 404, title: "Not Found", detail: "Invite not found") unless invite
+                unless invite
+                  return render_problem(response, status: 404, title: 'Not Found',
+                                                  detail: 'Invite not found')
+                end
 
                 if invite.accepted?
-                  return render_problem(response, status: 422, title: "Unprocessable Entity",
-                    detail: "This invite has already been accepted")
+                  return render_problem(response, status: 422, title: 'Unprocessable Entity',
+                                                  detail: 'This invite has already been accepted')
                 end
 
                 if invite.expired?
-                  return render_problem(response, status: 422, title: "Unprocessable Entity",
-                    detail: "This invite has expired")
+                  return render_problem(response, status: 422, title: 'Unprocessable Entity',
+                                                  detail: 'This invite has expired')
                 end
 
                 response.format = :json

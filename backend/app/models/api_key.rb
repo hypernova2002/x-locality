@@ -1,15 +1,16 @@
 # frozen_string_literal: true
 
-require "securerandom"
-require "digest"
+require 'securerandom'
+require 'digest'
 
 module Backend
   module Models
     class APIKey < Sequel::Model
       include Concerns::HasPublicId
-      public_id_prefix "apikey"
 
-      PREFIX = "xloc_"
+      public_id_prefix 'apikey'
+
+      PREFIX = 'xloc_'
 
       many_to_one :project
       many_to_one :created_by_user, class: User, key: :created_by_user_id
@@ -47,13 +48,18 @@ module Backend
       end
 
       def key=(plaintext)
-        self.key_ciphertext = plaintext.nil? ? nil : Backend::Crypto.encrypt(plaintext, key: Hanami.app["settings"].encryption_key)
+        self.key_ciphertext = if plaintext.nil?
+                                nil
+                              else
+                                Backend::Crypto.encrypt(plaintext,
+                                                        key: Hanami.app['settings'].encryption_key)
+                              end
       end
 
       def key
         return nil if key_ciphertext.nil?
 
-        Backend::Crypto.decrypt(key_ciphertext, key: Hanami.app["settings"].encryption_key)
+        Backend::Crypto.decrypt(key_ciphertext, key: Hanami.app['settings'].encryption_key)
       end
     end
   end

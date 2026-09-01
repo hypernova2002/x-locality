@@ -19,25 +19,25 @@ module Backend
       private
 
       def check_role(role)
-        return Failure([:validation, "role must be one of: #{ROLES.join(", ")}"]) unless ROLES.include?(role)
+        return Failure([:validation, "role must be one of: #{ROLES.join(', ')}"]) unless ROLES.include?(role)
 
         Success(true)
       end
 
       def find_user(project, email)
         user = Backend::Models::User.first(email: email, account_id: project.account_id)
-        return Failure([:not_found, "No user with this email in your account - invite them instead"]) unless user
+        return Failure([:not_found, 'No user with this email in your account - invite them instead']) unless user
 
         Success(user)
       end
 
       def check_not_already_member(project, user)
         if user.owner?
-          return Failure([:conflict, "This user is the account owner and already has access to every project"])
+          return Failure([:conflict, 'This user is the account owner and already has access to every project'])
         end
 
         if project.project_memberships_dataset.first(user_id: user.id)
-          return Failure([:conflict, "This user is already a member of this project"])
+          return Failure([:conflict, 'This user is already a member of this project'])
         end
 
         Success(true)

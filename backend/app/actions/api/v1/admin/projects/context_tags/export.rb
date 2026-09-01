@@ -15,15 +15,15 @@ module Backend
 
                 def handle(request, response)
                   unless request.params.valid?
-                    return render_problem(response, status: 422, title: "Unprocessable Entity",
-                      errors: request.params.errors.to_h)
+                    return render_problem(response, status: 422, title: 'Unprocessable Entity',
+                                                    errors: request.params.errors.to_h)
                   end
 
-                  format = request.params[:format] || "csv"
+                  format = request.params[:format] || 'csv'
                   result = Backend::ContextTags::Export.new.call(project: project(request), format: format).value!
 
-                  response.headers["Content-Type"] = "application/octet-stream"
-                  response.headers["Content-Disposition"] = "attachment; filename=\"#{result[:filename]}\""
+                  response.headers['Content-Type'] = 'application/octet-stream'
+                  response.headers['Content-Disposition'] = "attachment; filename=\"#{result[:filename]}\""
                   response.body = result[:content]
                 end
               end

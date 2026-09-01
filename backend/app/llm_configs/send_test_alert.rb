@@ -13,9 +13,7 @@ module Backend
       private
 
       def check_email(config)
-        unless config&.alert_email
-          return Failure([:validation, "Set an alert email before sending a test"])
-        end
+        return Failure([:validation, 'Set an alert email before sending a test']) unless config&.alert_email
 
         Success(true)
       end

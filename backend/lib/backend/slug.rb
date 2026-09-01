@@ -5,7 +5,7 @@ module Backend
     module_function
 
     def generate(text)
-      text.to_s.downcase.strip.gsub(/[^a-z0-9]+/, "-").gsub(/\A-+|-+\z/, "")
+      text.to_s.downcase.strip.gsub(/[^a-z0-9]+/, '-').gsub(/\A-+|-+\z/, '')
     end
   end
 end

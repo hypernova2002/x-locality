@@ -17,12 +17,15 @@ module Backend
 
                 def handle(request, response)
                   unless request.params.valid?
-                    return render_problem(response, status: 422, title: "Unprocessable Entity",
-                      errors: request.params.errors.to_h)
+                    return render_problem(response, status: 422, title: 'Unprocessable Entity',
+                                                    errors: request.params.errors.to_h)
                   end
 
                   tag = project(request).context_tags_dataset.first(public_id: request.params[:id])
-                  return render_problem(response, status: 404, title: "Not Found", detail: "Context tag not found") unless tag
+                  unless tag
+                    return render_problem(response, status: 404, title: 'Not Found',
+                                                    detail: 'Context tag not found')
+                  end
 
                   updates = request.params.to_h.slice(:key, :description)
                   result = Backend::ContextTags::Update.new.call(context_tag: tag, updates: updates)

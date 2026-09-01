@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "csv"
-require "json"
-require "zlib"
-require "stringio"
-require "base64"
+require 'csv'
+require 'json'
+require 'zlib'
+require 'stringio'
+require 'base64'
 
 module Backend
   module GlossaryTerms
@@ -28,7 +28,7 @@ module Backend
           target_term = row[:target_term].to_s
 
           if source_term.empty? || source_language.empty? || target_term.empty?
-            skipped << { key: source_term, reason: "missing_required_field" }
+            skipped << { key: source_term, reason: 'missing_required_field' }
             next
           end
 
@@ -37,7 +37,7 @@ module Backend
           unless target_locale_key.empty?
             locale = locales_by_key[target_locale_key]
             unless locale
-              skipped << { key: source_term, reason: "unknown_target_locale" }
+              skipped << { key: source_term, reason: 'unknown_target_locale' }
               next
             end
             target_locale_id = locale.id
@@ -74,8 +74,8 @@ module Backend
 
       def parse(raw, format)
         rows = case format
-               when "json" then JSON.parse(raw, symbolize_names: true)
-               when "csv" then CSV.parse(raw, headers: true, header_converters: :symbol).map(&:to_h)
+               when 'json' then JSON.parse(raw, symbolize_names: true)
+               when 'csv' then CSV.parse(raw, headers: true, header_converters: :symbol).map(&:to_h)
                end
         Success(rows)
       rescue StandardError => e

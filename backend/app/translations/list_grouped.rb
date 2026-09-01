@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "pagy"
+require 'pagy'
 
 module Backend
   module Translations
@@ -10,9 +10,9 @@ module Backend
     # API-key surface, which external integrations may depend on as-is.
     class ListGrouped < Backend::Operation
       def call(project:, search: nil, key: nil, status: nil, source_language: nil, target_language: nil,
-        llm_provider: nil, llm_model: nil, locked: nil, offset: 0, limit: 20)
+               llm_provider: nil, llm_model: nil, locked: nil, offset: 0, limit: 20)
         matching = filtered_dataset(project, search:, key:, status:, source_language:, target_language:,
-          llm_provider:, llm_model:, locked:)
+                                             llm_provider:, llm_model:, locked:)
 
         keys_dataset = matching.select(:key).distinct.order(:key)
         page = (offset / limit) + 1
@@ -45,7 +45,8 @@ module Backend
 
       private
 
-      def filtered_dataset(project, search:, key:, status:, source_language:, target_language:, llm_provider:, llm_model:, locked:)
+      def filtered_dataset(project, search:, key:, status:, source_language:, target_language:, llm_provider:,
+                           llm_model:, locked:)
         dataset = project.translations_dataset
 
         dataset = dataset.where(Sequel.ilike(:source_text, "%#{search}%")) if search
@@ -57,13 +58,13 @@ module Backend
 
         if source_language
           dataset = dataset.where(
-            Sequel.|({ source_language: }, { detected_language: source_language }),
+            Sequel.|({ source_language: }, { detected_language: source_language })
           )
         end
 
         if target_language
           locale = project.locales_dataset.first(key: target_language)
-          dataset = locale ? dataset.where(locale_id: locale.id) : dataset.where(Sequel.lit("false"))
+          dataset = locale ? dataset.where(locale_id: locale.id) : dataset.where(Sequel.lit('false'))
         end
 
         dataset
@@ -71,9 +72,9 @@ module Backend
 
       def usage_counts(project, keys)
         rows = Backend::Models::TranslationUsageEvent
-          .where(project_id: project.id, key: keys)
-          .group_and_count(:key, :cached)
-          .all
+               .where(project_id: project.id, key: keys)
+               .group_and_count(:key, :cached)
+               .all
 
         counts = Hash.new { |h, k| h[k] = { total_requests: 0, cache_hits: 0, llm_generations: 0 } }
         rows.each do |row|

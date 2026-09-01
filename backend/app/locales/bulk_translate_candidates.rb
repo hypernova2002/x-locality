@@ -10,19 +10,19 @@ module Backend
     class BulkTranslateCandidates < Backend::Operation
       def call(project:, locale:)
         source_by_key = project.translations_dataset
-          .exclude(source_text: nil)
-          .eager(:context_tags)
-          .order(:key, Sequel.desc(:updated_at))
-          .all
-          .group_by(&:key)
-          .transform_values(&:first)
+                               .exclude(source_text: nil)
+                               .eager(:context_tags)
+                               .order(:key, Sequel.desc(:updated_at))
+                               .all
+                               .group_by(&:key)
+                               .transform_values(&:first)
 
         completed_keys = project.translations_dataset
-          .where(locale_id: locale.id, status: "completed")
-          .select_map(:key)
-          .to_set
+                                .where(locale_id: locale.id, status: 'completed')
+                                .select_map(:key)
+                                .to_set
 
-        candidates = source_by_key.reject { |key, _| completed_keys.include?(key) }.map do |key, row|
+        candidates = source_by_key.except(*completed_keys).map do |key, row|
           {
             key: key,
             source_text: row.source_text,

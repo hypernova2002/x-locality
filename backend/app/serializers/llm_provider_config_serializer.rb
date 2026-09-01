@@ -8,17 +8,11 @@ module Backend
 
       attributes :name, :description, :provider, :created_at, :updated_at
 
-      attribute :id do |config|
-        config.public_id
-      end
+      attribute :id, &:public_id
 
-      attribute :model do |config|
-        config.llm_model
-      end
+      attribute :model, &:llm_model
 
-      attribute :api_key_configured do |config|
-        config.api_key_configured?
-      end
+      attribute :api_key_configured, &:api_key_configured?
     end
   end
 end

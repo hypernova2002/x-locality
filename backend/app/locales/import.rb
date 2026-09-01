@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "csv"
-require "json"
-require "zlib"
-require "stringio"
-require "base64"
+require 'csv'
+require 'json'
+require 'zlib'
+require 'stringio'
+require 'base64'
 
 module Backend
   module Locales
@@ -27,13 +27,13 @@ module Backend
           target_language = row[:target_language].to_s.strip
 
           if key.empty? || target_language.empty?
-            skipped << { key: key, reason: "missing_key_or_target_language" }
+            skipped << { key: key, reason: 'missing_key_or_target_language' }
             next
           end
 
           existing = project.locales_dataset.first(key: key)
           if existing&.system
-            skipped << { key: key, reason: "system" }
+            skipped << { key: key, reason: 'system' }
             next
           end
 
@@ -67,8 +67,8 @@ module Backend
 
       def parse(raw, format)
         rows = case format
-               when "json" then JSON.parse(raw, symbolize_names: true)
-               when "csv" then CSV.parse(raw, headers: true, header_converters: :symbol).map(&:to_h)
+               when 'json' then JSON.parse(raw, symbolize_names: true)
+               when 'csv' then CSV.parse(raw, headers: true, header_converters: :symbol).map(&:to_h)
                end
         Success(rows)
       rescue StandardError => e

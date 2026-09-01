@@ -5,13 +5,13 @@
 # Every timestamp in this API is UTC (see config/providers/db.rb), so this
 # makes that explicit and unambiguous in the wire format too.
 class Time
-  def to_json(*args)
-    iso8601(3).to_json(*args)
+  def to_json(*)
+    iso8601(3).to_json(*)
   end
 end
 
 class DateTime
-  def to_json(*args)
-    to_time.iso8601(3).to_json(*args)
+  def to_json(*)
+    to_time.iso8601(3).to_json(*)
   end
 end

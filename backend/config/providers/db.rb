@@ -2,7 +2,7 @@
 
 Hanami.app.register_provider(:db) do
   prepare do
-    require "sequel"
+    require 'sequel'
   end
 
   start do
@@ -11,14 +11,14 @@ Hanami.app.register_provider(:db) do
     # pinned to UTC via ENV["TZ"] (see docker-compose).
     Sequel.default_timezone = :utc
 
-    db = Sequel.connect(target["settings"].database_url)
+    db = Sequel.connect(target['settings'].database_url)
     db.extension :pg_array
     Sequel::Model.db = db
     Sequel::Model.plugin :timestamps, update_on_create: true
-    register "db", db
+    register 'db', db
   end
 
   stop do
-    target["db"].disconnect
+    target['db'].disconnect
   end
 end

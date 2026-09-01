@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 FactoryBot.define do
-  factory :project, class: "Backend::Models::Project" do
+  factory :project, class: 'Backend::Models::Project' do
     association :account
     sequence(:name) { |n| "Project #{n}" }
     sequence(:slug) { |n| "project-#{n}" }
@@ -19,12 +19,12 @@ FactoryBot.define do
     trait :with_llm_configured do
       after(:create) do |project|
         llm_config = Backend::Models::LlmConfig.first(project_id: project.id) ||
-          Backend::Models::LlmConfig.create(project_id: project.id)
+                     Backend::Models::LlmConfig.create(project_id: project.id)
 
         provider_config = Backend::Models::LlmProviderConfig.create(
-          project_id: project.id, name: "Default", provider: "anthropic"
+          project_id: project.id, name: 'Default', provider: 'anthropic'
         )
-        provider_config.api_key = "test-llm-api-key"
+        provider_config.api_key = 'test-llm-api-key'
         provider_config.save
 
         llm_config.update(active_llm_provider_config_id: provider_config.id)

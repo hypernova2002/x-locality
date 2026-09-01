@@ -18,18 +18,21 @@ module Backend
 
                 def handle(request, response)
                   unless request.params.valid?
-                    return render_problem(response, status: 422, title: "Unprocessable Entity",
-                      errors: request.params.errors.to_h)
+                    return render_problem(response, status: 422, title: 'Unprocessable Entity',
+                                                    errors: request.params.errors.to_h)
                   end
 
                   locale = project(request).locales_dataset.first(public_id: request.params[:id])
-                  return render_problem(response, status: 404, title: "Not Found", detail: "Locale not found") unless locale
+                  unless locale
+                    return render_problem(response, status: 404, title: 'Not Found',
+                                                    detail: 'Locale not found')
+                  end
 
                   result = Backend::Locales::BulkTranslate.new.call(
                     project: project(request),
                     locale: locale,
                     keys: request.params[:keys],
-                    unit_limit: Hanami.app["settings"].batch_translation_unit_limit
+                    unit_limit: Hanami.app['settings'].batch_translation_unit_limit
                   )
 
                   case result

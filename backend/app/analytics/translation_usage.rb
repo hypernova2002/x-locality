@@ -31,7 +31,7 @@ module Backend
           .map do |date, group|
             cache_hits = group.count(&:cached)
             {
-              date: date.strftime("%Y-%m-%d"),
+              date: date.strftime('%Y-%m-%d'),
               total_requests: group.size,
               cache_hits: cache_hits,
               llm_generations: group.size - cache_hits

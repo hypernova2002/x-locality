@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "factory_bot"
+require 'factory_bot'
 
 # FactoryBot's create strategy calls #save! (ActiveRecord convention).
 # Sequel::Model#save already raises on failure by default

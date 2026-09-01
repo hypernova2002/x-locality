@@ -16,8 +16,8 @@ module Backend
 
                 def handle(request, response)
                   unless request.params.valid?
-                    return render_problem(response, status: 422, title: "Unprocessable Entity",
-                      errors: request.params.errors.to_h)
+                    return render_problem(response, status: 422, title: 'Unprocessable Entity',
+                                                    errors: request.params.errors.to_h)
                   end
 
                   result = Backend::Translations::AddLocale.new.call(
@@ -27,7 +27,8 @@ module Backend
                   case result
                   in Success(_body)
                     locale = project(request).locales_dataset.first(key: request.params[:locale])
-                    created = project(request).translations_dataset.first(key: request.params[:key], locale_id: locale.id)
+                    created = project(request).translations_dataset.first(key: request.params[:key],
+                                                                          locale_id: locale.id)
                     response.status = 201
                     response.format = :json
                     response.body = Backend::Serializers::TranslationSerializer.new(created).serialize

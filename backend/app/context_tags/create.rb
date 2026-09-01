@@ -17,7 +17,7 @@ module Backend
 
       def check_key_available(project, key)
         if project.context_tags_dataset.first(key: key)
-          return Failure([:conflict, "A context tag with this key already exists on this project"])
+          return Failure([:conflict, 'A context tag with this key already exists on this project'])
         end
 
         Success(true)

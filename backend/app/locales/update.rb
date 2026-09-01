@@ -14,7 +14,7 @@ module Backend
       private
 
       def check_not_system(locale)
-        return Failure([:forbidden, "System locales are read-only"]) if locale.system
+        return Failure([:forbidden, 'System locales are read-only']) if locale.system
 
         Success(true)
       end

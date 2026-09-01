@@ -10,7 +10,7 @@ module Backend
         Backend::Models::User.db.transaction do
           account = Backend::Models::Account.create(name: account_name)
           user = Backend::Models::User.create(
-            account: account, email: email, password: password, role: "owner"
+            account: account, email: email, password: password, role: 'owner'
           )
         end
 
@@ -20,7 +20,7 @@ module Backend
       private
 
       def check_email_available(email)
-        return Failure([:conflict, "Email is already in use"]) if Backend::Models::User.first(email: email)
+        return Failure([:conflict, 'Email is already in use']) if Backend::Models::User.first(email: email)
 
         Success(true)
       end

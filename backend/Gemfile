@@ -1,67 +1,68 @@
 # frozen_string_literal: true
 
-source "https://rubygems.org"
+source 'https://rubygems.org'
 
-gem "hanami", "~> 3.0.0"
-gem "hanami-action", "~> 3.0.0"
-gem "hanami-router", "~> 3.0.0"
+gem 'hanami', '~> 3.0.0'
+gem 'hanami-action', '~> 3.0.0'
+gem 'hanami-router', '~> 3.0.0'
 
-gem "dry-types", "~> 1.7"
-gem "dry-operation", ">= 1.0.1"
-gem "dry-validation", "~> 1.11"
-gem "i18n", "~> 1.14"
-gem "puma", ">= 7.1"
-gem "rake"
+gem 'dry-operation', '>= 1.0.1'
+gem 'dry-types', '~> 1.7'
+gem 'dry-validation', '~> 1.11'
+gem 'i18n', '~> 1.14'
+gem 'puma', '>= 7.1'
+gem 'rake'
 
 # Persistence - Sequel::Model directly, no hanami-db/ROM
-gem "sequel", "~> 5.87"
-gem "pg", "~> 1.5"
+gem 'pg', '~> 1.5'
+gem 'sequel', '~> 5.87'
 
 # Background jobs
-gem "sidekiq", "~> 8.0"
+gem 'sidekiq', '~> 8.0'
 
 # Budget alert emails - plain SMTP, points at MailHog in dev
-gem "mail", "~> 2.8"
+gem 'mail', '~> 2.8'
 
 # Bulk translation export/import - extracted from Ruby's default gems as of
 # 3.4, so they need declaring explicitly to load under Bundler.
-gem "csv", "~> 3.3"
-gem "base64", "~> 0.2"
+gem 'base64', '~> 0.2'
+gem 'csv', '~> 3.3'
 
 # Redis client (used directly for the rack-attack store, separate from
 # Sidekiq's own internal redis-client dependency)
-gem "redis", "~> 5.3"
+gem 'redis', '~> 5.3'
 
 # API concerns
-gem "pagy", "~> 43.5"
-gem "alba", "~> 3.6"
-gem "rack-cors", "~> 3.0"
-gem "rack-attack", "~> 6.7"
+gem 'alba', '~> 3.6'
+gem 'pagy', '~> 43.5'
+gem 'rack-attack', '~> 6.7'
+gem 'rack-cors', '~> 3.0'
 
 # Auth
-gem "jwt", "~> 2.9"
-gem "bcrypt", "~> 3.1"
+gem 'bcrypt', '~> 3.1'
+gem 'jwt', '~> 2.9'
 
 # LLM providers
-gem "anthropic", "~> 1.0"
-gem "openai", "~> 0.1"
+gem 'anthropic', '~> 1.0'
+gem 'openai', '~> 0.1'
 # Gemini has no official Ruby SDK; ruby-gemini-api is actively maintained
 # (monthly releases) and only needs Faraday - no native library deps.
-gem "ruby-gemini-api", "~> 1.3"
+gem 'ruby-gemini-api', '~> 1.3'
 
 group :development do
-  gem "hanami-webconsole", "~> 3.0.0"
+  gem 'hanami-webconsole', '~> 3.0.0'
+  gem 'rubocop', '~> 1.81', require: false
 end
 
 group :cli, :development do
-  gem "hanami-reloader", "~> 3.0.0"
+  gem 'hanami-reloader', '~> 3.0.0'
 end
 
 group :cli, :development, :test do
-  gem "hanami-rspec", "~> 3.0.0"
+  gem 'hanami-rspec', '~> 3.0.0'
 end
 
 group :test do
-  gem "factory_bot", "~> 6.4"
-  gem "webmock", "~> 3.19"
+  gem 'factory_bot', '~> 6.4'
+  gem 'webmock', '~> 3.19'
 end

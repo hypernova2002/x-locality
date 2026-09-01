@@ -10,7 +10,10 @@ module Backend
               class Versions < Action
                 def handle(request, response)
                   translation = project(request).translations_dataset.first(public_id: request.params[:id])
-                  return render_problem(response, status: 404, title: "Not Found", detail: "Translation not found") unless translation
+                  unless translation
+                    return render_problem(response, status: 404, title: 'Not Found',
+                                                    detail: 'Translation not found')
+                  end
 
                   versions = translation.versions_dataset.order(:id).all
 

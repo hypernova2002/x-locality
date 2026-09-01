@@ -7,9 +7,7 @@ module Backend
 
       attributes :email, :role, :created_at
 
-      attribute :id do |user|
-        user.public_id
-      end
+      attribute :id, &:public_id
     end
   end
 end

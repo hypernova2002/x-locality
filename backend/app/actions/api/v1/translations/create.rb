@@ -22,8 +22,8 @@ module Backend
 
             def handle(request, response)
               unless request.params.valid?
-                return render_problem(response, status: 422, title: "Unprocessable Entity",
-                  errors: request.params.errors.to_h)
+                return render_problem(response, status: 422, title: 'Unprocessable Entity',
+                                                errors: request.params.errors.to_h)
               end
 
               project = current_project(request)
@@ -31,7 +31,7 @@ module Backend
                 project: project,
                 target_locale_keys: request.params[:target_locales],
                 items: request.params[:items],
-                unit_limit: Hanami.app["settings"].sync_translation_unit_limit
+                unit_limit: Hanami.app['settings'].sync_translation_unit_limit
               )
 
               record_usage_events(project, result.value!) if result.success?

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "csv"
-require "json"
-require "zlib"
-require "stringio"
-require "base64"
+require 'csv'
+require 'json'
+require 'zlib'
+require 'stringio'
+require 'base64'
 
 module Backend
   module Translations
@@ -29,35 +29,39 @@ module Backend
           locale_key = row[:locale].to_s.strip
 
           if key.empty? || locale_key.empty?
-            skipped << { key: key, locale: locale_key, reason: "missing_key_or_locale" }
+            skipped << { key: key, locale: locale_key, reason: 'missing_key_or_locale' }
             next
           end
 
           locale = locales_by_key[locale_key]
           unless locale
-            skipped << { key: key, locale: locale_key, reason: "unknown_locale" }
+            skipped << { key: key, locale: locale_key, reason: 'unknown_locale' }
             next
           end
 
           source_text = row[:source_text].to_s
           if source_text.empty?
-            skipped << { key: key, locale: locale_key, reason: "missing_source_text" }
+            skipped << { key: key, locale: locale_key, reason: 'missing_source_text' }
             next
           end
 
           existing = project.translations_dataset.first(key: key, locale_id: locale.id)
           if existing&.locked
-            skipped << { key: key, locale: locale_key, reason: "locked" }
+            skipped << { key: key, locale: locale_key, reason: 'locked' }
             next
           end
 
           translated_text = row[:translated_text].to_s.empty? ? nil : row[:translated_text].to_s
-          status = row[:status].to_s.empty? ? (translated_text ? "completed" : "pending") : row[:status].to_s
+          status = if row[:status].to_s.empty?
+                     translated_text ? 'completed' : 'pending'
+                   else
+                     row[:status].to_s
+                   end
           source_language = row[:source_language].to_s.empty? ? nil : row[:source_language].to_s
 
           attrs = {
             source_text: source_text, source_language: source_language,
-            translated_text: translated_text, status: status, generated_by: "user"
+            translated_text: translated_text, status: status, generated_by: 'user'
           }
 
           if existing
@@ -84,8 +88,8 @@ module Backend
 
       def parse(raw, format)
         rows = case format
-               when "json" then JSON.parse(raw, symbolize_names: true)
-               when "csv" then CSV.parse(raw, headers: true, header_converters: :symbol).map(&:to_h)
+               when 'json' then JSON.parse(raw, symbolize_names: true)
+               when 'csv' then CSV.parse(raw, headers: true, header_converters: :symbol).map(&:to_h)
                end
         Success(rows)
       rescue StandardError => e

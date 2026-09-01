@@ -7,7 +7,7 @@ module Backend
       many_to_one :user
 
       def admin?
-        role == "admin"
+        role == 'admin'
       end
     end
   end

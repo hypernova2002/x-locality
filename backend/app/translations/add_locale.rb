@@ -43,7 +43,7 @@ module Backend
 
       def check_not_already_present(project, key, locale)
         existing = project.translations_dataset.first(key: key, locale_id: locale.id)
-        return Failure([:conflict, "This key already has a translation for that locale"]) if existing
+        return Failure([:conflict, 'This key already has a translation for that locale']) if existing
 
         Success(true)
       end

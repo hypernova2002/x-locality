@@ -7,9 +7,7 @@ module Backend
 
       attributes :previous_value, :new_value, :changed_by_type, :created_at
 
-      attribute :id do |version|
-        version.public_id
-      end
+      attribute :id, &:public_id
 
       attribute :changed_by_user_email do |version|
         version.changed_by_user&.email

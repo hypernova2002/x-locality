@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "csv"
-require "json"
-require "zlib"
-require "stringio"
-require "base64"
+require 'csv'
+require 'json'
+require 'zlib'
+require 'stringio'
+require 'base64'
 
 module Backend
   module ContextTags
@@ -22,7 +22,7 @@ module Backend
           key = row[:key].to_s.strip
 
           if key.empty?
-            skipped << { key: key, reason: "missing_key" }
+            skipped << { key: key, reason: 'missing_key' }
             next
           end
 
@@ -53,8 +53,8 @@ module Backend
 
       def parse(raw, format)
         rows = case format
-               when "json" then JSON.parse(raw, symbolize_names: true)
-               when "csv" then CSV.parse(raw, headers: true, header_converters: :symbol).map(&:to_h)
+               when 'json' then JSON.parse(raw, symbolize_names: true)
+               when 'csv' then CSV.parse(raw, headers: true, header_converters: :symbol).map(&:to_h)
                end
         Success(rows)
       rescue StandardError => e

@@ -11,7 +11,7 @@ module Backend
                 def handle(request, response)
                   term = project(request).glossary_terms_dataset.first(public_id: request.params[:id])
                   unless term
-                    return render_problem(response, status: 404, title: "Not Found", detail: "Glossary term not found")
+                    return render_problem(response, status: 404, title: 'Not Found', detail: 'Glossary term not found')
                   end
 
                   Backend::GlossaryTerms::Delete.new.call(glossary_term: term)

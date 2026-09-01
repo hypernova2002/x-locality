@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require 'spec_helper'
 
 RSpec.describe Backend::LlmProviderConfigs::Delete do
-  describe "#call" do
-    it "destroys the config" do
+  describe '#call' do
+    it 'destroys the config' do
       config = create(:llm_provider_config)
 
       described_class.new.call(config: config)

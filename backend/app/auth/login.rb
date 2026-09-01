@@ -11,7 +11,7 @@ module Backend
 
       def authenticate(email, password)
         user = Backend::Models::User.first(email: email)
-        return Failure([:unauthorized, "Invalid email or password"]) unless user && user.authenticate(password)
+        return Failure([:unauthorized, 'Invalid email or password']) unless user&.authenticate(password)
 
         Success(user)
       end

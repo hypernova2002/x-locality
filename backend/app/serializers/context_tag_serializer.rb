@@ -7,9 +7,7 @@ module Backend
 
       attributes :key, :description, :created_at, :updated_at
 
-      attribute :id do |context_tag|
-        context_tag.public_id
-      end
+      attribute :id, &:public_id
     end
   end
 end

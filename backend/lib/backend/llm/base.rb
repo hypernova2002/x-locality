@@ -18,8 +18,8 @@ module Backend
       def build_prompt(items:, locale:)
         lines = ["Translate each of the following items into #{locale.target_language}."]
         lines << "Style/tone: #{locale.style_tone_text}" if locale.style_tone_text && !locale.style_tone_text.empty?
-        lines << ""
-        lines << "Items (respond with exactly one translation per key, echoing the key exactly):"
+        lines << ''
+        lines << 'Items (respond with exactly one translation per key, echoing the key exactly):'
 
         items.each do |item|
           lines << "- key: #{item[:key]}"
@@ -28,12 +28,12 @@ module Backend
           unless item[:context_tags].nil? || item[:context_tags].empty?
             lines << "  context: #{item[:context_tags].map { |tag| "#{tag.key} (#{tag.description})" }.join(', ')}"
           end
-          unless item[:glossary_terms].nil? || item[:glossary_terms].empty?
-            glossary = item[:glossary_terms].map do |term|
-              "if relevant, translate \"#{term.source_term}\" as \"#{term.target_term}\""
-            end.join('; ')
-            lines << "  glossary: #{glossary}"
-          end
+          next if item[:glossary_terms].nil? || item[:glossary_terms].empty?
+
+          glossary = item[:glossary_terms].map do |term|
+            "if relevant, translate \"#{term.source_term}\" as \"#{term.target_term}\""
+          end.join('; ')
+          lines << "  glossary: #{glossary}"
         end
 
         lines.join("\n")

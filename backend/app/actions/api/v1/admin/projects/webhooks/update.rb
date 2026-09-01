@@ -20,12 +20,15 @@ module Backend
 
                 def handle(request, response)
                   unless request.params.valid?
-                    return render_problem(response, status: 422, title: "Unprocessable Entity",
-                      errors: request.params.errors.to_h)
+                    return render_problem(response, status: 422, title: 'Unprocessable Entity',
+                                                    errors: request.params.errors.to_h)
                   end
 
                   webhook = project(request).project_webhooks_dataset.first(public_id: request.params[:id])
-                  return render_problem(response, status: 404, title: "Not Found", detail: "Webhook not found") unless webhook
+                  unless webhook
+                    return render_problem(response, status: 404, title: 'Not Found',
+                                                    detail: 'Webhook not found')
+                  end
 
                   updates = request.params.to_h.slice(:url, :event_types, :enabled)
                   result = Backend::ProjectWebhooks::Update.new.call(project_webhook: webhook, updates: updates)

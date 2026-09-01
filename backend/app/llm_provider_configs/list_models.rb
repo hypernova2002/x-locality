@@ -16,7 +16,7 @@ module Backend
 
       def check_present(provider, api_key)
         if provider.nil? || provider.empty? || api_key.nil? || api_key.empty?
-          return Failure([:unconfigured, "Provider and API key are required to list models"])
+          return Failure([:unconfigured, 'Provider and API key are required to list models'])
         end
 
         Success(true)

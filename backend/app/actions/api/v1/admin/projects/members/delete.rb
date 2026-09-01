@@ -14,15 +14,21 @@ module Backend
                   target_user = Backend::Models::User.first(
                     public_id: request.params[:user_id], account_id: project(request).account_id
                   )
-                  return render_problem(response, status: 404, title: "Not Found", detail: "User not found") unless target_user
+                  unless target_user
+                    return render_problem(response, status: 404, title: 'Not Found',
+                                                    detail: 'User not found')
+                  end
 
                   if target_user.owner?
-                    return render_problem(response, status: 422, title: "Unprocessable Entity",
-                      detail: "The account owner can't be removed from a project")
+                    return render_problem(response, status: 422, title: 'Unprocessable Entity',
+                                                    detail: "The account owner can't be removed from a project")
                   end
 
                   membership = project(request).project_memberships_dataset.first(user_id: target_user.id)
-                  return render_problem(response, status: 404, title: "Not Found", detail: "This user isn't a member of this project") unless membership
+                  unless membership
+                    return render_problem(response, status: 404, title: 'Not Found',
+                                                    detail: "This user isn't a member of this project")
+                  end
 
                   Backend::ProjectMemberships::Delete.new.call(membership: membership)
                   response.status = 204

@@ -8,9 +8,7 @@ module Backend
 
       attributes :email, :role, :expires_at, :created_at
 
-      attribute :id do |invite|
-        invite.public_id
-      end
+      attribute :id, &:public_id
 
       attribute :invited_by_email do |invite|
         invite.invited_by_user&.email

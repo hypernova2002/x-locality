@@ -8,18 +8,22 @@ module Backend
     # saved and switch between them without re-entering credentials.
     class LlmConfig < Sequel::Model
       many_to_one :project
-      many_to_one :active_llm_provider_config, class: "Backend::Models::LlmProviderConfig"
+      many_to_one :active_llm_provider_config, class: 'Backend::Models::LlmProviderConfig'
 
       def langfuse_secret_key=(plaintext)
-        self.langfuse_secret_key_ciphertext = plaintext.nil? || plaintext.empty? ? nil : Backend::Crypto.encrypt(
-          plaintext, key: Hanami.app["settings"].encryption_key
-        )
+        self.langfuse_secret_key_ciphertext = if plaintext.nil? || plaintext.empty?
+                                                nil
+                                              else
+                                                Backend::Crypto.encrypt(
+                                                  plaintext, key: Hanami.app['settings'].encryption_key
+                                                )
+                                              end
       end
 
       def langfuse_secret_key
         return nil if langfuse_secret_key_ciphertext.nil?
 
-        Backend::Crypto.decrypt(langfuse_secret_key_ciphertext, key: Hanami.app["settings"].encryption_key)
+        Backend::Crypto.decrypt(langfuse_secret_key_ciphertext, key: Hanami.app['settings'].encryption_key)
       end
 
       def langfuse_secret_key_configured?

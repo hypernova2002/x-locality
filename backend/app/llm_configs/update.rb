@@ -43,7 +43,7 @@ module Backend
         end
 
         provider_config = project.llm_provider_configs_dataset.first(public_id: public_id)
-        return Failure([:not_found, "LLM provider config not found"]) unless provider_config
+        return Failure([:not_found, 'LLM provider config not found']) unless provider_config
 
         config.active_llm_provider_config_id = provider_config.id
         Success(true)

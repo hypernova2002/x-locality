@@ -10,7 +10,10 @@ module Backend
               class Delete < Action
                 def handle(request, response)
                   locale = project(request).locales_dataset.first(public_id: request.params[:id])
-                  return render_problem(response, status: 404, title: "Not Found", detail: "Locale not found") unless locale
+                  unless locale
+                    return render_problem(response, status: 404, title: 'Not Found',
+                                                    detail: 'Locale not found')
+                  end
 
                   result = Backend::Locales::Delete.new.call(locale: locale)
 

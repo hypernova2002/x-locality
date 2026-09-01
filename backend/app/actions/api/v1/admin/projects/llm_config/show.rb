@@ -12,7 +12,10 @@ module Backend
 
                 def handle(request, response)
                   config = project(request).llm_config
-                  return render_problem(response, status: 404, title: "Not Found", detail: "LLM config not found") unless config
+                  unless config
+                    return render_problem(response, status: 404, title: 'Not Found',
+                                                    detail: 'LLM config not found')
+                  end
 
                   response.format = :json
                   response.body = Backend::Serializers::LlmConfigSerializer.new(config).serialize

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "securerandom"
+require 'securerandom'
 
 module Backend
   module ProjectWebhooks
@@ -19,7 +19,7 @@ module Backend
         unknown = event_types - Backend::Models::ProjectWebhook::EVENT_TYPES
         return Failure([:validation, "Unknown event type(s): #{unknown.join(', ')}"]) unless unknown.empty?
 
-        return Failure([:validation, "At least one event type is required"]) if event_types.empty?
+        return Failure([:validation, 'At least one event type is required']) if event_types.empty?
 
         Success(true)
       end

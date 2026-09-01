@@ -7,9 +7,7 @@ module Backend
 
       attributes :event_type, :response_status, :error_message, :success, :created_at
 
-      attribute :id do |delivery|
-        delivery.id
-      end
+      attribute :id, &:id
     end
   end
 end

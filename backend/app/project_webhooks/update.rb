@@ -5,9 +5,7 @@ module Backend
     class Update < Backend::Operation
       # `updates` only contains keys the client actually sent.
       def call(project_webhook:, updates:)
-        if updates.key?(:event_types)
-          step check_valid_event_types(updates[:event_types])
-        end
+        step check_valid_event_types(updates[:event_types]) if updates.key?(:event_types)
 
         project_webhook.update(updates.slice(:url, :event_types, :enabled))
         project_webhook
@@ -19,7 +17,7 @@ module Backend
         unknown = event_types - Backend::Models::ProjectWebhook::EVENT_TYPES
         return Failure([:validation, "Unknown event type(s): #{unknown.join(', ')}"]) unless unknown.empty?
 
-        return Failure([:validation, "At least one event type is required"]) if event_types.empty?
+        return Failure([:validation, 'At least one event type is required']) if event_types.empty?
 
         Success(true)
       end

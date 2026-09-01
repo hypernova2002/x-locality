@@ -10,8 +10,8 @@ module Backend
               records = current_project(request).translations_dataset.where(key: request.params[:key]).all
 
               if records.empty?
-                return render_problem(response, status: 404, title: "Not Found",
-                  detail: "No translations found for key '#{request.params[:key]}'")
+                return render_problem(response, status: 404, title: 'Not Found',
+                                                detail: "No translations found for key '#{request.params[:key]}'")
               end
 
               response.format = :json

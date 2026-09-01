@@ -10,11 +10,11 @@ module Backend
               def handle(request, response)
                 user = current_user(request)
                 projects = if user.owner?
-                  Backend::Models::Project.where(account_id: user.account_id)
-                else
-                  member_project_ids = Backend::Models::ProjectMembership.where(user_id: user.id).select_map(:project_id)
-                  Backend::Models::Project.where(account_id: user.account_id, id: member_project_ids)
-                end.order(:name).all
+                             Backend::Models::Project.where(account_id: user.account_id)
+                           else
+                             member_project_ids = Backend::Models::ProjectMembership.where(user_id: user.id).select_map(:project_id)
+                             Backend::Models::Project.where(account_id: user.account_id, id: member_project_ids)
+                           end.order(:name).all
 
                 response.format = :json
                 response.body = Backend::Serializers::ProjectSerializer.new(

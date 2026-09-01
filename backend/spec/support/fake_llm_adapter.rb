@@ -13,7 +13,7 @@ class FakeLlmAdapter
   def initialize(results_by_key:)
     @results_by_key = results_by_key
     @usage = Backend::Llm::Usage.new(input_tokens: 100, output_tokens: 20)
-    @model = "claude-opus-5"
+    @model = 'claude-opus-5'
     @raises = nil
     @call_count = 0
   end
@@ -25,7 +25,7 @@ class FakeLlmAdapter
     items.map do |item|
       Backend::Llm::Result.new(
         key: item[:key], translated_text: @results_by_key.fetch(item[:key]),
-        detected_source_language: "en", usage: @usage
+        detected_source_language: 'en', usage: @usage
       )
     end
   end

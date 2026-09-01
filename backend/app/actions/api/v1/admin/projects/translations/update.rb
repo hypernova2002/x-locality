@@ -16,12 +16,15 @@ module Backend
 
                 def handle(request, response)
                   unless request.params.valid?
-                    return render_problem(response, status: 422, title: "Unprocessable Entity",
-                      errors: request.params.errors.to_h)
+                    return render_problem(response, status: 422, title: 'Unprocessable Entity',
+                                                    errors: request.params.errors.to_h)
                   end
 
                   translation = project(request).translations_dataset.first(public_id: request.params[:id])
-                  return render_problem(response, status: 404, title: "Not Found", detail: "Translation not found") unless translation
+                  unless translation
+                    return render_problem(response, status: 404, title: 'Not Found',
+                                                    detail: 'Translation not found')
+                  end
 
                   result = Backend::Translations::Update.new.call(
                     translation: translation,

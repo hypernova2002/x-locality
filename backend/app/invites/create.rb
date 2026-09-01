@@ -27,7 +27,7 @@ module Backend
       private
 
       def check_role(role)
-        return Failure([:validation, "role must be one of: #{ROLES.join(", ")}"]) unless ROLES.include?(role)
+        return Failure([:validation, "role must be one of: #{ROLES.join(', ')}"]) unless ROLES.include?(role)
 
         Success(true)
       end
@@ -37,9 +37,9 @@ module Backend
         return Success(true) unless existing
 
         if existing.account_id == project.account_id
-          Failure([:conflict, "This user is already in your account - add them directly instead of inviting"])
+          Failure([:conflict, 'This user is already in your account - add them directly instead of inviting'])
         else
-          Failure([:conflict, "This email is already registered to a different account"])
+          Failure([:conflict, 'This email is already registered to a different account'])
         end
       end
     end

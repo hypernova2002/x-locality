@@ -16,7 +16,10 @@ module Backend
                   members = []
 
                   owner = project(request).account.owner
-                  members << { user_id: owner.public_id, email: owner.email, project_role: "admin", account_role: "owner" } if owner
+                  if owner
+                    members << { user_id: owner.public_id, email: owner.email, project_role: 'admin',
+                                 account_role: 'owner' }
+                  end
 
                   project(request).project_memberships_dataset.eager(:user).all.each do |m|
                     members << {

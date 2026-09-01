@@ -16,9 +16,7 @@ module Backend
       private
 
       def check_not_owner(user)
-        if user.owner?
-          return Failure([:validation, "The account owner can't be deleted - transfer ownership first"])
-        end
+        return Failure([:validation, "The account owner can't be deleted - transfer ownership first"]) if user.owner?
 
         Success(true)
       end

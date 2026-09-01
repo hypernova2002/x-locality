@@ -18,16 +18,16 @@ module Backend
     def call(env)
       @app.call(env)
     rescue Hanami::Router::NotFoundError
-      problem(404, "Not Found", "No route matches this request")
+      problem(404, 'Not Found', 'No route matches this request')
     rescue Hanami::Router::NotAllowedError
-      problem(405, "Method Not Allowed", "This route does not support that HTTP method")
+      problem(405, 'Method Not Allowed', 'This route does not support that HTTP method')
     end
 
     private
 
     def problem(status, title, detail)
-      body = { type: "about:blank", title: title, status: status, detail: detail }.to_json
-      [status, { "Content-Type" => "application/problem+json" }, [body]]
+      body = { type: 'about:blank', title: title, status: status, detail: detail }.to_json
+      [status, { 'Content-Type' => 'application/problem+json' }, [body]]
     end
   end
 end

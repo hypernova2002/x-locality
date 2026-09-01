@@ -19,7 +19,8 @@ module Backend
           # explicit membership row would be redundant and would need
           # upkeep if ownership is ever transferred later.
           unless created_by_user.owner?
-            Backend::Models::ProjectMembership.create(project_id: project.id, user_id: created_by_user.id, role: "admin")
+            Backend::Models::ProjectMembership.create(project_id: project.id, user_id: created_by_user.id,
+                                                      role: 'admin')
           end
 
           Backend::Models::LlmConfig.create(project_id: project.id)
@@ -42,7 +43,7 @@ module Backend
 
       def check_slug_available(account, slug)
         if Backend::Models::Project.first(account_id: account.id, slug: slug)
-          return Failure([:conflict, "A project with this name already exists"])
+          return Failure([:conflict, 'A project with this name already exists'])
         end
 
         Success(true)
