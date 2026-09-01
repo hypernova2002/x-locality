@@ -1,0 +1,536 @@
+{
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "name": "Name",
+    "description": "Description",
+    "descriptionOptional": "Optional",
+    "any": "Any",
+    "somethingWentWrong": "Something went wrong",
+    "copiedToClipboard": "Copied to clipboard",
+    "confirmDeleteTitle": "Are you sure?"
+  },
+  "search": {
+    "placeholder": "Search translations..."
+  },
+  "nav": {
+    "brand": "x-locality",
+    "project": "Project",
+    "newProject": "+ New",
+    "selectProject": "Select project",
+    "createFirstProject": "Create your first project",
+    "translations": "Translations",
+    "locales": "Locales",
+    "contextTags": "Context Tags",
+    "glossary": "Glossary",
+    "usage": "Usage",
+    "members": "Members",
+    "settings": "Settings",
+    "accountSettings": "Account",
+    "logOut": "Log out",
+    "darkMode": "Switch to dark mode",
+    "lightMode": "Switch to light mode"
+  },
+  "auth": {
+    "login": {
+      "title": "Log in",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Log in",
+      "noAccount": "No account?",
+      "signUp": "Sign up"
+    },
+    "signup": {
+      "title": "Create your account",
+      "accountName": "Account name",
+      "accountNamePlaceholder": "Acme Inc",
+      "email": "Email",
+      "password": "Password",
+      "passwordPlaceholder": "At least 8 characters",
+      "submit": "Sign up",
+      "haveAccount": "Already have an account?",
+      "logIn": "Log in"
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "newProject": "New Project",
+    "empty": "No projects yet. Create one to get started.",
+    "createModal": {
+      "header": "New project",
+      "name": "Name",
+      "namePlaceholder": "Marketing Site",
+      "submit": "Create"
+    },
+    "createdToast": "Project created"
+  },
+  "translations": {
+    "filters": "Filters",
+    "hideFilters": "Hide filters",
+    "regenerateSelected": "Regenerate selected ({count})",
+    "deleteSelected": "Delete selected ({count})",
+    "filterKeyContains": "Key contains",
+    "filterKeyPlaceholder": "homepage",
+    "filterStatus": "Status",
+    "filterSourceLanguage": "Source language",
+    "filterTargetLanguage": "Target language",
+    "filterLlmProvider": "LLM provider",
+    "filterLlmModel": "LLM model",
+    "filterLocked": "Locked",
+    "statusCompleted": "Completed",
+    "statusPending": "Pending",
+    "statusFailed": "Failed",
+    "lockedTrue": "Locked",
+    "lockedFalse": "Unlocked",
+    "empty": "No translations yet.",
+    "selectAll": "Select all",
+    "languagesCount": "{count} languages",
+    "usageTooltip": "{cached} from cache, {generated} generated",
+    "lock": "Lock",
+    "unlock": "Unlock",
+    "bulkDeleteConfirm": "Delete {count} selected key(s)? This removes every locale's translation for each. Locked keys are skipped.",
+    "bulkDeleteToastPartial": "Deleted {deleted}, skipped {skipped} locked",
+    "bulkDeleteToastFull": "Deleted {count} key(s)",
+    "bulkRegenerateConfirm": "Regenerate {count} selected key(s)? This calls the LLM again for every locale, bypassing the cache.",
+    "bulkRegenerateAccept": "Regenerate",
+    "bulkRegenerateToastPartial": "Regenerated {regenerated}, {failed} failed",
+    "bulkRegenerateToastFull": "Regenerated {count} key(s)",
+    "unlockedToast": "Unlocked",
+    "lockedToast": "Locked",
+    "export": "Export",
+    "exportCsv": "Export as CSV",
+    "exportJson": "Export as JSON",
+    "exportError": "Could not export translations",
+    "import": "Import",
+    "importModal": {
+      "header": "Import translations",
+      "file": "File",
+      "fileHint": "A CSV or JSON export (gzip-compressed or plain) with key, locale and source_text columns.",
+      "format": "Format",
+      "submit": "Import",
+      "selectFileFirst": "Choose a file to import",
+      "summary": "Imported: {created} created, {updated} updated, {skipped} skipped",
+      "skippedReason": "{key} ({locale}): {reason}"
+    }
+  },
+  "translationDetail": {
+    "label": "Translations",
+    "usageCount": "{count} requests",
+    "addLocale": "Add locale",
+    "addLocalePlaceholder": "Select a locale",
+    "localeAddedToast": "Locale added",
+    "save": "Save",
+    "regenerate": "Regenerate",
+    "showHistory": "Show history",
+    "hideHistory": "Hide history",
+    "noEdits": "No edits yet.",
+    "llmGeneration": "LLM generation",
+    "updatedToast": "Translation updated",
+    "regeneratedToast": "Regenerated",
+    "lock": "Lock",
+    "unlock": "Unlock"
+  },
+  "locales": {
+    "systemNote": "System locales (seeded ISO languages) are read-only and can't be edited or deleted.",
+    "newLocale": "New Locale",
+    "empty": "No locales yet.",
+    "system": "system",
+    "edit": "Edit",
+    "delete": "Delete",
+    "createdToast": "Locale created",
+    "updatedToast": "Locale updated",
+    "deletedToast": "Locale deleted",
+    "deleteConfirm": "Delete this locale?",
+    "createModal": {
+      "header": "New locale",
+      "key": "Key",
+      "keyPlaceholder": "fr-casual",
+      "targetLanguage": "Target language",
+      "targetLanguagePlaceholder": "fr",
+      "styleTone": "Style / tone",
+      "styleTonePlaceholder": "Casual, friendly",
+      "description": "Description",
+      "descriptionPlaceholder": "For social posts",
+      "submit": "Create"
+    },
+    "editModal": {
+      "header": "Edit locale",
+      "targetLanguage": "Target language",
+      "styleTone": "Style / tone",
+      "description": "Description",
+      "submit": "Save"
+    },
+    "export": "Export",
+    "exportCsv": "Export as CSV",
+    "exportJson": "Export as JSON",
+    "exportError": "Could not export locales",
+    "import": "Import",
+    "importModal": {
+      "header": "Import locales",
+      "file": "File",
+      "fileHint": "A CSV or JSON export (gzip-compressed or plain) with key and target_language columns.",
+      "format": "Format",
+      "submit": "Import",
+      "selectFileFirst": "Choose a file to import",
+      "summary": "Imported: {created} created, {updated} updated, {skipped} skipped",
+      "skippedReason": "{key}: {reason}"
+    },
+    "bulkTranslate": "Bulk translate",
+    "bulkTranslateModal": {
+      "header": "Bulk translate into {locale}",
+      "description": "{total} key(s) are missing a translation for this locale.",
+      "selectAll": "Select all",
+      "noCandidates": "Every key already has a translation for this locale.",
+      "costWarning": "This will generate {count} translation(s) via your configured LLM provider, which may take a while and incur cost for large selections.",
+      "submit": "Translate {count} selected",
+      "summary": "{completed} translated, {failed} failed"
+    }
+  },
+  "contextTags": {
+    "description": "Tags you can attach to a translation request to steer the LLM (e.g. \"fruit\" vs \"brand\" for the same source word).",
+    "newTag": "New Tag",
+    "empty": "No context tags yet.",
+    "edit": "Edit",
+    "delete": "Delete",
+    "createdToast": "Context tag created",
+    "updatedToast": "Context tag updated",
+    "deletedToast": "Context tag deleted",
+    "deleteConfirm": "Delete this context tag? Translations using it will lose the association.",
+    "createModal": {
+      "header": "New context tag",
+      "key": "Key",
+      "keyPlaceholder": "fruit",
+      "description": "Description",
+      "descriptionPlaceholder": "Use when the source word refers to fruit, not a company/brand",
+      "submit": "Create"
+    },
+    "editModal": {
+      "header": "Edit context tag",
+      "key": "Key",
+      "description": "Description",
+      "submit": "Save"
+    },
+    "export": "Export",
+    "exportCsv": "Export as CSV",
+    "exportJson": "Export as JSON",
+    "exportError": "Could not export context tags",
+    "import": "Import",
+    "importModal": {
+      "header": "Import context tags",
+      "file": "File",
+      "fileHint": "A CSV or JSON export (gzip-compressed or plain) with key and description columns.",
+      "format": "Format",
+      "submit": "Import",
+      "selectFileFirst": "Choose a file to import",
+      "summary": "Imported: {created} created, {updated} updated, {skipped} skipped",
+      "skippedReason": "{key}: {reason}"
+    }
+  },
+  "glossaryTerms": {
+    "description": "Mandated term translations, automatically applied whenever the source text contains them - for brand names, technical jargon, or terms with one company-approved translation.",
+    "newTerm": "New Term",
+    "empty": "No glossary terms yet.",
+    "allLocales": "All locales",
+    "edit": "Edit",
+    "delete": "Delete",
+    "createdToast": "Glossary term created",
+    "updatedToast": "Glossary term updated",
+    "deletedToast": "Glossary term deleted",
+    "deleteConfirm": "Delete this glossary term?",
+    "createModal": {
+      "header": "New glossary term",
+      "sourceTerm": "Source term",
+      "sourceTermPlaceholder": "workspace",
+      "sourceLanguage": "Source language",
+      "sourceLanguagePlaceholder": "en",
+      "targetTerm": "Target term",
+      "targetTermPlaceholder": "espace de travail",
+      "targetLocale": "Target locale",
+      "targetLocaleHint": "\"All locales\" is for terms that should never be translated, like brand names - the same target term is used regardless of the target language.",
+      "submit": "Create"
+    },
+    "editModal": {
+      "header": "Edit glossary term",
+      "sourceTerm": "Source term",
+      "sourceLanguage": "Source language",
+      "targetTerm": "Target term",
+      "targetLocale": "Target locale",
+      "submit": "Save"
+    },
+    "export": "Export",
+    "exportCsv": "Export as CSV",
+    "exportJson": "Export as JSON",
+    "exportError": "Could not export glossary terms",
+    "import": "Import",
+    "importModal": {
+      "header": "Import glossary terms",
+      "file": "File",
+      "fileHint": "A CSV or JSON export (gzip-compressed or plain) with source_term, source_language, target_locale and target_term columns.",
+      "format": "Format",
+      "submit": "Import",
+      "selectFileFirst": "Choose a file to import",
+      "summary": "Imported: {created} created, {updated} updated, {skipped} skipped",
+      "skippedReason": "{key}: {reason}"
+    }
+  },
+  "members": {
+    "cardTitle": "Project members",
+    "addButton": "Add member",
+    "owner": "owner",
+    "roleAdmin": "admin",
+    "roleMember": "member",
+    "addedToast": "Member added",
+    "invitedToast": "Invite sent",
+    "roleUpdatedToast": "Role updated",
+    "removedToast": "Member removed",
+    "removeConfirm": "Remove {email} from this project?",
+    "addModal": {
+      "header": "Add a member",
+      "email": "Email",
+      "role": "Role",
+      "hint": "If this email already has an account, they're added immediately. Otherwise we'll send them an invite to set up their account.",
+      "submit": "Add"
+    },
+    "invites": {
+      "cardTitle": "Pending invites",
+      "empty": "No pending invites.",
+      "cancel": "Cancel invite",
+      "cancelConfirm": "Cancel the invite to {email}?",
+      "cancelledToast": "Invite cancelled"
+    }
+  },
+  "acceptInvite": {
+    "title": "You're invited",
+    "loading": "Loading invite...",
+    "invitedTo": "You've been invited to join \"{project}\" as {role}.",
+    "invitedBy": "Invited by {email}.",
+    "password": "Set a password",
+    "passwordPlaceholder": "At least 8 characters",
+    "submit": "Accept and join",
+    "invalidTitle": "This invite isn't valid",
+    "goToLogin": "Go to login"
+  },
+  "account": {
+    "tabs": {
+      "branding": "Branding",
+      "timezone": "Timezone",
+      "users": "Users",
+      "danger": "Danger Zone"
+    },
+    "brandingCard": {
+      "cardTitle": "Branding",
+      "name": "Account name",
+      "logoUrl": "Logo URL",
+      "logoUrlPlaceholder": "https://example.com/logo.png",
+      "logoUrlHint": "A link to your logo, shown in the sidebar and in outgoing emails. Leave blank to use the default x-locality logo.",
+      "correspondenceName": "Email sender name",
+      "correspondenceNameHint": "How your account appears as the sender of emails (budget alerts, invites). Defaults to the account name above.",
+      "save": "Save",
+      "savedToast": "Branding updated"
+    },
+    "timezoneCard": {
+      "cardTitle": "Display timezone",
+      "label": "Timezone",
+      "hint": "Times throughout x-locality are shown in this timezone for everyone in your account.",
+      "savedToast": "Timezone updated"
+    },
+    "usersCard": {
+      "cardTitle": "People in your account",
+      "owner": "owner",
+      "remove": "Remove",
+      "removeConfirm": "Remove {email} from the account entirely? This deletes their access to every project.",
+      "removedToast": "User removed"
+    },
+    "transferCard": {
+      "cardTitle": "Transfer ownership",
+      "description": "Make another user the account owner. You'll be demoted to a regular member.",
+      "email": "New owner's email",
+      "submit": "Transfer ownership",
+      "confirm": "Make {email} the account owner? You'll no longer be able to delete the account or transfer ownership again unless they transfer it back.",
+      "transferredToast": "Ownership transferred"
+    },
+    "dangerCard": {
+      "cardTitle": "Danger zone",
+      "description": "Permanently delete this account, every project, and all their data. This cannot be undone.",
+      "deleteButton": "Delete account",
+      "deleteConfirm": "Permanently delete this account and everything in it? This cannot be undone."
+    }
+  },
+  "usage": {
+    "last7Days": "Last 7 days",
+    "last30Days": "Last 30 days",
+    "last90Days": "Last 90 days",
+    "allProjects": "All projects on this account",
+    "api": {
+      "tab": "API",
+      "totalRequests": "Total requests",
+      "succeeded": "{count} succeeded",
+      "failed": "{count} failed",
+      "translationsPerformed": "Translations performed",
+      "completed": "{count} completed",
+      "noRequests": "No requests in this period."
+    },
+    "llm": {
+      "tab": "LLM",
+      "inputTokens": "Input tokens",
+      "outputTokens": "Output tokens",
+      "estimatedCost": "Estimated cost",
+      "avgLatency": "Avg. latency",
+      "calls": "LLM calls",
+      "succeeded": "{count} succeeded",
+      "failed": "{count} failed",
+      "noUsage": "No LLM usage in this period.",
+      "byProviderModel": "By provider / model",
+      "colProvider": "Provider",
+      "colModel": "Model",
+      "colTranslations": "Translations",
+      "colCalls": "Calls (ok / failed)",
+      "colInput": "Input",
+      "colOutput": "Output",
+      "colLatency": "Latency",
+      "colCost": "Cost",
+      "recentFailures": "Recent failures",
+      "noErrorMessage": "No error message recorded"
+    },
+    "translations": {
+      "tab": "Translations",
+      "totalRequests": "Total requests",
+      "cacheHits": "Cache hits",
+      "llmGenerations": "LLM generations",
+      "noUsage": "No translation requests in this period."
+    }
+  },
+  "settings": {
+    "notAdminHint": "Only project admins can view or change these settings.",
+    "tabs": {
+      "general": "General",
+      "llm": "LLM",
+      "providers": "LLM Providers",
+      "apiKeys": "API Keys",
+      "webhooks": "Webhooks"
+    },
+    "project": {
+      "cardTitle": "Project",
+      "name": "Name",
+      "save": "Save",
+      "savedToast": "Saved"
+    },
+    "llm": {
+      "cardTitle": "LLM",
+      "activeConfig": "Active provider config",
+      "activeConfigPlaceholder": "None selected - translations will fail",
+      "activeConfigHint": "Manage the saved configs below. Switching here doesn't require re-entering any API key.",
+      "costLimit": "Monthly cost limit",
+      "noLimit": "No limit",
+      "tokenLimit": "Monthly token limit",
+      "alertEmail": "Alert email",
+      "alertEmailPlaceholder": "you\\@example.com",
+      "testAlert": "Send test alert",
+      "testAlertHint": "Save an alert email above to enable sending a test.",
+      "testAlertSentToast": "Test alert sent",
+      "alertThreshold": "Alert threshold",
+      "alertThresholdHint": "Sends one email to the alert address the first time usage crosses this % of either limit in a month.",
+      "langfuseEnabled": "Trace LLM calls in Langfuse",
+      "langfuseHint": "Sends every translation call's input, output, model, tokens, and latency to a self-hosted Langfuse project.",
+      "langfusePublicKey": "Langfuse public key",
+      "langfuseSecretKey": "Langfuse secret key",
+      "langfuseSecretKeyConfigured": "Configured - enter a new key to replace it",
+      "save": "Save",
+      "savedToast": "LLM settings saved",
+      "configActiveToast": "{name} is now active"
+    },
+    "llmProviders": {
+      "cardTitle": "LLM Providers",
+      "newConfig": "New Config",
+      "description": "Saved provider/model/key combinations for this project. Keep several around and switch the active one above without re-entering credentials.",
+      "empty": "No saved configs yet.",
+      "active": "active",
+      "noKey": "no key",
+      "setActive": "Set active",
+      "deleteActiveConfirm": "This is the active config - deleting it will leave the project unconfigured until another is selected. Continue?",
+      "deleteConfirm": "Permanently delete \"{name}\"? This cannot be undone.",
+      "savedToast": "LLM provider config saved",
+      "deletedToast": "LLM provider config deleted",
+      "modal": {
+        "createHeader": "New LLM provider config",
+        "editHeader": "Edit LLM provider config",
+        "name": "Name",
+        "namePlaceholder": "Prod Anthropic key",
+        "description": "Description",
+        "descriptionPlaceholder": "Optional - what this config is for",
+        "provider": "Provider",
+        "apiKey": "API key",
+        "apiKeyConfigured": "Configured - enter a new key to replace it",
+        "apiKeyPlaceholder": "Paste an API key",
+        "model": "Model",
+        "modelPlaceholder": "Select a model",
+        "fetchModels": "Fetch models",
+        "fetchModelsError": "Could not fetch models",
+        "currentModelHint": "Currently set to {model}. Enter the API key above and fetch models to change it.",
+        "save": "Save"
+      }
+    },
+    "apiKeys": {
+      "cardTitle": "API Keys",
+      "newKey": "New API Key",
+      "description": "Keys used by the translation API (not the admin section).",
+      "empty": "No API keys yet.",
+      "active": "active",
+      "revoked": "revoked",
+      "notShown": "not shown",
+      "neverUsed": "never used",
+      "revoke": "Revoke",
+      "revokeConfirm": "Revoke this API key? Requests using it will stop working immediately.",
+      "revokedToast": "API key revoked",
+      "deleteConfirm": "Permanently delete this API key? This cannot be undone.",
+      "deletedToast": "API key deleted",
+      "createdToast": "API key created",
+      "createModal": {
+        "header": "New API key",
+        "name": "Name",
+        "namePlaceholder": "CI key",
+        "submit": "Create"
+      }
+    },
+    "webhooks": {
+      "cardTitle": "Webhooks",
+      "description": "Notify an external URL when translation activity happens or a budget threshold is crossed. Each delivery is signed (HMAC-SHA256) so you can verify it came from x-locality.",
+      "newWebhook": "New Webhook",
+      "empty": "No webhooks yet.",
+      "test": "Send test",
+      "deliveries": "Deliveries",
+      "edit": "Edit",
+      "delete": "Delete",
+      "deleteConfirm": "Delete this webhook? This cannot be undone.",
+      "createdToast": "Webhook created",
+      "updatedToast": "Webhook updated",
+      "deletedToast": "Webhook deleted",
+      "testSentToast": "Test delivery succeeded",
+      "testFailedToast": "Test delivery failed",
+      "eventTypes": {
+        "translation.batch_completed": "Translation batch completed",
+        "budget.threshold_crossed": "Budget threshold crossed"
+      },
+      "createModal": {
+        "header": "New webhook"
+      },
+      "editModal": {
+        "header": "Edit webhook"
+      },
+      "formModal": {
+        "url": "URL",
+        "eventTypes": "Event types",
+        "submit": "Save"
+      },
+      "deliveriesModal": {
+        "header": "Recent deliveries",
+        "empty": "No deliveries yet.",
+        "success": "Success",
+        "failed": "Failed"
+      }
+    }
+  }
+}

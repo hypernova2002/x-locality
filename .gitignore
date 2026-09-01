@@ -1,0 +1,29 @@
+# Local secrets - see docker-compose.example.yml for the tracked template
+docker-compose.yml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editors
+.vscode/
+.idea/
+*.swp
+
+# Env files (this project configures everything via docker-compose.yml,
+# but ignore stray ones as a safety net)
+.env
+.env.*
+!.env.*.example
+
+# Logs
+*.log
+
+# Dependency dirs, in case anything is ever run outside its container
+node_modules/
+
+# Personal API request collections / scratch scripts - not part of the app
+api-requests.sh
+
+# Claude Code local session state
+.claude/

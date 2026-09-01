@@ -1,0 +1,9 @@
+.git/
+.github/
+.claude/
+docs/
+*.md
+.DS_Store
+docker-compose.yml
+docker-compose.example.yml
+api-requests.sh

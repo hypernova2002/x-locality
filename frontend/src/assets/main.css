@@ -1,0 +1,72 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+
+html,
+body,
+#app {
+  height: 100%;
+}
+
+/* PrimeVue's own --p-surface-N ramp doesn't invert between light/dark (only
+   the color family swaps, e.g. slate->zinc, at the same relative lightness
+   per step) - it has no token for an app-level page canvas either, since
+   that's assumed to be supplied by the app. This is that token. */
+:root {
+  --app-canvas: var(--p-surface-50);
+}
+
+.p-dark {
+  --app-canvas: var(--p-surface-950);
+}
+
+html {
+  /* Down from the 16px browser default - Tailwind's rem-based type/spacing
+     scale shrinks proportionally with it, for a denser, more "pro tool"
+     feel rather than resizing every component's classes individually. */
+  font-size: 14px;
+}
+
+body {
+  margin: 0;
+  font-family:
+    'Inter Variable',
+    ui-sans-serif,
+    system-ui,
+    sans-serif;
+  letter-spacing: -0.011em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.02em;
+}
+
+/* Elevation: a soft resting shadow on every card, so content reads as a
+   distinct surface rather than just an outlined box - subtle enough not to
+   look heavy when many cards stack on one page. */
+.p-card {
+  box-shadow:
+    0 1px 2px 0 rgba(15, 23, 42, 0.04),
+    0 1px 3px 0 rgba(15, 23, 42, 0.06);
+}
+
+/* A consistent, quick transition on anything interactive - hover/focus
+   state changes (color, border, shadow) ease in instead of snapping. */
+a,
+button,
+[role='button'],
+.p-card,
+.p-inputtext,
+.p-select,
+.p-password {
+  transition:
+    color 150ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    transform 150ms ease;
+}
