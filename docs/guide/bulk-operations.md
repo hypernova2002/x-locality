@@ -1,6 +1,6 @@
 # Bulk operations
 
-x-locality has two different ways to generate or move a lot of translations at once — they solve different problems.
+XLocality has two different ways to generate or move a lot of translations at once — they solve different problems.
 
 ## Bulk translate a locale
 

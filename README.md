@@ -1,4 +1,4 @@
-# x-locality
+# XLocality
 
 Translation/localisation API. Ruby/Hanami backend using Sequel for persistence, with a Vue UI to follow. Everything runs in Docker — no Ruby, Postgres, or Redis needs to be installed on your machine.
 

@@ -22,7 +22,7 @@ Every delivery is a `POST` request with a JSON body and two headers:
 - `X-Webhook-Event` — the event type, e.g. `translation.batch_completed`.
 - `X-Webhook-Signature` — `sha256=<hex-encoded HMAC-SHA256 of the raw request body, using your webhook's secret>`.
 
-Recompute the HMAC on your end with the same secret and compare it to the header before trusting the payload — this confirms the request actually came from x-locality and wasn't forged or tampered with in transit.
+Recompute the HMAC on your end with the same secret and compare it to the header before trusting the payload — this confirms the request actually came from XLocality and wasn't forged or tampered with in transit.
 
 ## Testing and debugging
 

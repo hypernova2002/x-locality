@@ -1,8 +1,8 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'x-locality',
-  description: 'User guide for x-locality, the translation management platform.',
+  title: 'XLocality',
+  description: 'User guide for XLocality, the translation management platform.',
 
   // GitHub Pages project sites are served at https://<org>.github.io/<repo>/,
   // so this must match your actual repo name once one exists. Set to '/' if
@@ -60,7 +60,7 @@ export default defineConfig({
     socialLinks: [],
 
     footer: {
-      message: 'x-locality user guide',
+      message: 'XLocality user guide',
     },
   },
 })

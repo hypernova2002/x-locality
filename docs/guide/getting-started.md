@@ -1,6 +1,6 @@
 # Getting started
 
-x-locality organizes work into **accounts**, **projects**, and **locales**:
+XLocality organizes work into **accounts**, **projects**, and **locales**:
 
 - An **account** is your organization. It holds billing/branding settings, team members, and one or more projects.
 - A **project** is a single translatable product or app — most teams create one project per app they're localizing.

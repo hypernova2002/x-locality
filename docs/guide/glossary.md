@@ -21,7 +21,7 @@ You can have multiple entries for the same source term with different target loc
 
 ## How matching works
 
-When a translation is generated, x-locality checks the source text for any glossary term (same source language, and either matching the target locale or a wildcard "all locales" entry) and includes it in the prompt as a conditional instruction — "if relevant, translate X as Y." The LLM decides whether it actually applies, so an imperfect match is harmless; it's only a problem if a term that *should* apply gets missed, which matters more than an occasional over-match.
+When a translation is generated, XLocality checks the source text for any glossary term (same source language, and either matching the target locale or a wildcard "all locales" entry) and includes it in the prompt as a conditional instruction — "if relevant, translate X as Y." The LLM decides whether it actually applies, so an imperfect match is harmless; it's only a problem if a term that *should* apply gets missed, which matters more than an occasional over-match.
 
 ::: tip
 Matching is plain substring matching, not word-boundary-anchored — this is deliberate. Many languages (Japanese, Chinese, Thai) don't use spaces between words, so a stricter match would silently fail to catch exactly the languages where getting this right matters most.

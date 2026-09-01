@@ -17,7 +17,7 @@
     "placeholder": "Search translations..."
   },
   "nav": {
-    "brand": "x-locality",
+    "brand": "XLocality",
     "project": "Project",
     "newProject": "+ New",
     "selectProject": "Select project",
@@ -325,7 +325,7 @@
       "name": "Account name",
       "logoUrl": "Logo URL",
       "logoUrlPlaceholder": "https://example.com/logo.png",
-      "logoUrlHint": "A link to your logo, shown in the sidebar and in outgoing emails. Leave blank to use the default x-locality logo.",
+      "logoUrlHint": "A link to your logo, shown in the sidebar and in outgoing emails. Leave blank to use the default XLocality logo.",
       "correspondenceName": "Email sender name",
       "correspondenceNameHint": "How your account appears as the sender of emails (budget alerts, invites). Defaults to the account name above.",
       "save": "Save",
@@ -334,7 +334,7 @@
     "timezoneCard": {
       "cardTitle": "Display timezone",
       "label": "Timezone",
-      "hint": "Times throughout x-locality are shown in this timezone for everyone in your account.",
+      "hint": "Times throughout XLocality are shown in this timezone for everyone in your account.",
       "savedToast": "Timezone updated"
     },
     "usersCard": {
@@ -497,7 +497,7 @@
     },
     "webhooks": {
       "cardTitle": "Webhooks",
-      "description": "Notify an external URL when translation activity happens or a budget threshold is crossed. Each delivery is signed (HMAC-SHA256) so you can verify it came from x-locality.",
+      "description": "Notify an external URL when translation activity happens or a budget threshold is crossed. Each delivery is signed (HMAC-SHA256) so you can verify it came from XLocality.",
       "newWebhook": "New Webhook",
       "empty": "No webhooks yet.",
       "test": "Send test",

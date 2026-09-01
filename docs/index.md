@@ -2,12 +2,12 @@
 layout: home
 
 hero:
-  name: x-locality
+  name: XLocality
   text: User Guide
   tagline: Manage translations, locales, and LLM-powered generation for your projects.
   image:
     src: /favicon.svg
-    alt: x-locality
+    alt: XLocality
   actions:
     - theme: brand
       text: Get started

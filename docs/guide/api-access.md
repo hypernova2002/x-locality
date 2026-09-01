@@ -1,6 +1,6 @@
 # API access
 
-Applications integrate with x-locality through a separate, API-key-authenticated API — distinct from the admin UI you use in the browser, which is authenticated by your login session instead.
+Applications integrate with XLocality through a separate, API-key-authenticated API — distinct from the admin UI you use in the browser, which is authenticated by your login session instead.
 
 ## Creating an API key
 
@@ -13,7 +13,7 @@ Go to **Settings → API Keys** and click **New API Key**. Give it a descriptive
 Every request needs the key in an `Authorization: Bearer` header:
 
 ```bash
-curl https://your-x-locality-instance/api/v1/translations \
+curl https://your-xlocality-instance/api/v1/translations \
   -H "Authorization: Bearer <your-api-key>" \
   -H "Content-Type: application/json" \
   -d '{...}'
@@ -24,7 +24,7 @@ The key identifies which project the request belongs to — there's no separate 
 ## Requesting translations
 
 ```bash
-curl -X POST https://your-x-locality-instance/api/v1/translations \
+curl -X POST https://your-xlocality-instance/api/v1/translations \
   -H "Authorization: Bearer <your-api-key>" \
   -H "Content-Type: application/json" \
   -d '{
@@ -45,7 +45,7 @@ For each item and locale, this returns immediately from cache if an unchanged, c
 ## Fetching translations
 
 ```bash
-curl "https://your-x-locality-instance/api/v1/translations?locale=fr" \
+curl "https://your-xlocality-instance/api/v1/translations?locale=fr" \
   -H "Authorization: Bearer <your-api-key>"
 ```
 

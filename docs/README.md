@@ -1,4 +1,4 @@
-# x-locality docs
+# XLocality docs
 
 The user guide, built with [VitePress](https://vitepress.dev). Source pages are plain Markdown under `guide/`.
 
