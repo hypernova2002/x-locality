@@ -1,0 +1,129 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # CI-only, not a real secret - same throwaway-value convention as
+  # docker-compose.example.yml's development_only_password.
+  CI_ENCRYPTION_KEY: jEzaRnvA54v8y1i7WAPAFHfSuhEPxcVTf4KLr6agqJ0=
+  CI_JWT_SECRET: ci_only_jwt_secret_not_for_real_use
+
+jobs:
+  backend-lint:
+    runs-on: ubuntu-latest
+    container: ruby:4.0-slim
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          apt-get update -qq
+          apt-get install -y --no-install-recommends build-essential libpq-dev libssl-dev git
+
+      - uses: actions/cache@v4
+        with:
+          path: backend/vendor/bundle
+          key: ${{ runner.os }}-bundle-${{ hashFiles('backend/Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-bundle-
+
+      - name: Bundle install
+        working-directory: backend
+        run: |
+          bundle config set path vendor/bundle
+          bundle install --jobs 4 --retry 3
+
+      - name: Rubocop
+        working-directory: backend
+        run: bundle exec rubocop
+
+  backend-test:
+    needs: backend-lint
+    runs-on: ubuntu-latest
+    container: ruby:4.0-slim
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: x_locality_test
+          POSTGRES_USER: x_locality
+          POSTGRES_PASSWORD: development_only_password
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      HANAMI_ENV: test
+      DATABASE_URL: postgres://x_locality:development_only_password@postgres:5432/x_locality_test
+      SIDEKIQ_REDIS_URL: redis://redis:6379/0
+      RACK_ATTACK_REDIS_URL: redis://redis:6379/1
+      JWT_SECRET: ${{ env.CI_JWT_SECRET }}
+      ENCRYPTION_KEY: ${{ env.CI_ENCRYPTION_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          apt-get update -qq
+          apt-get install -y --no-install-recommends build-essential libpq-dev libssl-dev git
+
+      - uses: actions/cache@v4
+        with:
+          path: backend/vendor/bundle
+          key: ${{ runner.os }}-bundle-${{ hashFiles('backend/Gemfile.lock') }}
+          restore-keys: ${{ runner.os }}-bundle-
+
+      - name: Bundle install
+        working-directory: backend
+        run: |
+          bundle config set path vendor/bundle
+          bundle install --jobs 4 --retry 3
+
+      - name: Prepare test database
+        working-directory: backend
+        run: bundle exec rake db:test:prepare
+
+      - name: RSpec
+        working-directory: backend
+        run: bundle exec rspec
+
+  frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm install
+
+      - name: Lint
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Type-check
+        working-directory: frontend
+        run: npm run type-check
+
+      - name: Build
+        working-directory: frontend
+        run: npm run build

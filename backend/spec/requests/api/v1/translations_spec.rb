@@ -89,11 +89,11 @@ RSpec.describe 'Translations API', type: :openapi do
         run_test!
       end
 
-      response 422, 'limit is out of range' do
-        schema '$ref' => '#/components/schemas/ValidationProblemDetails'
+      response 422, 'locale does not exist on the project' do
+        schema '$ref' => '#/components/schemas/ProblemDetails'
 
         let(:Authorization) { "Bearer #{plaintext_key}" }
-        let(:limit) { 201 }
+        let(:locale) { 'does-not-exist' }
         run_test!
       end
     end

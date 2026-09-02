@@ -8,6 +8,7 @@ AllCops:
     - "db/migrate/*.rb"
     - "bin/*"
     - "tmp/**/*"
+    - "vendor/**/*"
 
 Style/Documentation:
   Enabled: false

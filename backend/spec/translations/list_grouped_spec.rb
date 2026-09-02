@@ -123,24 +123,23 @@ RSpec.describe Backend::Translations::ListGrouped do
       expect(data[:groups].map { |g| g[:key] }).to eq(['opus'])
     end
 
-    it 'paginates by key (alphabetical, keyset via after)' do
+    it 'paginates by key (alphabetical) via offset/limit' do
       %w[a b c].each { |k| create(:translation, project: project, locale: locale_fr, key: k) }
 
       first_page = described_class.new.call(project: project, limit: 2).value!
       expect(first_page[:groups].map { |g| g[:key] }).to eq(%w[a b])
-      expect(first_page[:has_more]).to be(true)
-      expect(first_page[:next_cursor]).to eq('b')
+      expect(first_page[:total]).to eq(3)
 
-      second_page = described_class.new.call(project: project, limit: 2, after: first_page[:next_cursor]).value!
+      second_page = described_class.new.call(project: project, limit: 2, offset: 2).value!
       expect(second_page[:groups].map { |g| g[:key] }).to eq(['c'])
-      expect(second_page[:has_more]).to be(false)
+      expect(second_page[:total]).to eq(3)
     end
 
     it 'returns an empty result for a project with no translations' do
       data = described_class.new.call(project: project).value!
 
       expect(data[:groups]).to eq([])
-      expect(data[:has_more]).to be(false)
+      expect(data[:total]).to eq(0)
     end
   end
 end
