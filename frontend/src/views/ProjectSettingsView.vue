@@ -183,13 +183,22 @@ const configDescription = ref('')
 const configProvider = ref('anthropic')
 const configModel = ref<string | null>(null)
 const configApiKey = ref('')
+const configApiSecret = ref('')
+const configRegion = ref('')
 const configError = ref<string | null>(null)
 const configSaving = ref(false)
 
 const providerOptions = [
   { label: 'Anthropic', value: 'anthropic' },
+  { label: 'OpenAI', value: 'openai' },
   { label: 'Gemini', value: 'gemini' },
+  { label: 'Amazon Bedrock', value: 'bedrock' },
+  { label: 'Amazon Translate', value: 'aws_translate' },
 ]
+
+const AWS_PROVIDERS = ['bedrock', 'aws_translate']
+const isAwsProvider = computed(() => AWS_PROVIDERS.includes(configProvider.value))
+const supportsModelSelection = computed(() => configProvider.value !== 'aws_translate')
 
 const availableModels = ref<LlmModelOption[]>([])
 const modelsLoading = ref(false)
@@ -198,6 +207,7 @@ const modelsError = ref<string | null>(null)
 watch(configProvider, () => {
   availableModels.value = []
   modelsError.value = null
+  if (!supportsModelSelection.value) configModel.value = null
 })
 
 function openCreateModal() {
@@ -207,6 +217,8 @@ function openCreateModal() {
   configProvider.value = 'anthropic'
   configModel.value = null
   configApiKey.value = ''
+  configApiSecret.value = ''
+  configRegion.value = ''
   configError.value = null
   availableModels.value = []
   modelsError.value = null
@@ -220,6 +232,8 @@ function openEditModal(config: LlmProviderConfig) {
   configProvider.value = config.provider
   configModel.value = config.model
   configApiKey.value = ''
+  configApiSecret.value = ''
+  configRegion.value = config.region ?? ''
   configError.value = null
   availableModels.value = []
   modelsError.value = null
@@ -233,6 +247,7 @@ async function handleFetchModels() {
     const { data } = await llmProviderConfigsApi.listModelsFor(auth.token!, project.value!.id, {
       provider: configProvider.value,
       api_key: configApiKey.value,
+      ...(isAwsProvider.value ? { api_secret: configApiSecret.value, region: configRegion.value } : {}),
     })
     availableModels.value = data
   } catch (e) {
@@ -252,8 +267,10 @@ async function handleSaveConfig() {
         description: configDescription.value || null,
         provider: configProvider.value,
         model: configModel.value,
+        region: configRegion.value || null,
       }
       if (configApiKey.value) params.api_key = configApiKey.value
+      if (configApiSecret.value) params.api_secret = configApiSecret.value
       await llmProviderConfigsApi.updateLlmProviderConfig(
         auth.token!,
         project.value!.id,
@@ -267,6 +284,8 @@ async function handleSaveConfig() {
         provider: configProvider.value,
         model: configModel.value || undefined,
         api_key: configApiKey.value || undefined,
+        api_secret: configApiSecret.value || undefined,
+        region: configRegion.value || undefined,
       })
     }
     showConfigModal.value = false
@@ -842,9 +861,13 @@ async function copyKey(key: string) {
           />
         </div>
 
+        <Message v-if="configProvider === 'aws_translate'" severity="warn" :closable="false">
+          {{ t('settings.llmProviders.modal.awsTranslateNote') }}
+        </Message>
+
         <div class="flex flex-col gap-2">
           <label for="config-api-key" class="text-sm font-medium text-[var(--p-text-color)]">{{
-            t('settings.llmProviders.modal.apiKey')
+            isAwsProvider ? t('settings.llmProviders.modal.accessKeyId') : t('settings.llmProviders.modal.apiKey')
           }}</label>
           <Password
             id="config-api-key"
@@ -860,7 +883,34 @@ async function copyKey(key: string) {
           />
         </div>
 
-        <div class="flex flex-col gap-2">
+        <template v-if="isAwsProvider">
+          <div class="flex flex-col gap-2">
+            <label for="config-api-secret" class="text-sm font-medium text-[var(--p-text-color)]">{{
+              t('settings.llmProviders.modal.secretAccessKey')
+            }}</label>
+            <Password
+              id="config-api-secret"
+              v-model="configApiSecret"
+              toggle-mask
+              :feedback="false"
+              fluid
+              :placeholder="
+                editingConfig?.api_secret_configured
+                  ? t('settings.llmProviders.modal.apiKeyConfigured')
+                  : t('settings.llmProviders.modal.apiKeyPlaceholder')
+              "
+            />
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label for="config-region" class="text-sm font-medium text-[var(--p-text-color)]">{{
+              t('settings.llmProviders.modal.region')
+            }}</label>
+            <InputText id="config-region" v-model="configRegion" placeholder="us-east-1" fluid />
+          </div>
+        </template>
+
+        <div v-if="supportsModelSelection" class="flex flex-col gap-2">
           <label for="config-model" class="text-sm font-medium text-[var(--p-text-color)]">{{
             t('settings.llmProviders.modal.model')
           }}</label>
@@ -881,7 +931,7 @@ async function copyKey(key: string) {
               text
               size="small"
               :loading="modelsLoading"
-              :disabled="!configApiKey"
+              :disabled="!configApiKey || (isAwsProvider && (!configApiSecret || !configRegion))"
               class="shrink-0"
               @click="handleFetchModels"
             />

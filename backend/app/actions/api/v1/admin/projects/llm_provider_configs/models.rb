@@ -14,6 +14,8 @@ module Backend
                   required(:project_id).filled(:string)
                   required(:provider).filled(:string)
                   required(:api_key).filled(:string)
+                  optional(:api_secret).maybe(:string)
+                  optional(:region).maybe(:string)
                 end
 
                 def handle(request, response)
@@ -23,7 +25,8 @@ module Backend
                   end
 
                   result = Backend::LlmProviderConfigs::ListModels.new.call(
-                    provider: request.params[:provider], api_key: request.params[:api_key]
+                    provider: request.params[:provider], api_key: request.params[:api_key],
+                    api_secret: request.params[:api_secret], region: request.params[:region]
                   )
 
                   case result

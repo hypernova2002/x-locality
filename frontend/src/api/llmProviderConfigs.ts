@@ -10,7 +10,15 @@ export function listLlmProviderConfigs(token: string, projectId: string) {
 export function createLlmProviderConfig(
   token: string,
   projectId: string,
-  params: { name: string; provider: string; description?: string; model?: string; api_key?: string },
+  params: {
+    name: string
+    provider: string
+    description?: string
+    model?: string
+    api_key?: string
+    api_secret?: string
+    region?: string
+  },
 ) {
   return apiRequest<LlmProviderConfig>(`/api/v1/admin/projects/${projectId}/llm_provider_configs`, {
     method: 'POST',
@@ -29,6 +37,8 @@ export function updateLlmProviderConfig(
     provider: string
     model: string | null
     api_key: string | null
+    api_secret: string | null
+    region: string | null
   }>,
 ) {
   return apiRequest<LlmProviderConfig>(
@@ -47,7 +57,7 @@ export function deleteLlmProviderConfig(token: string, projectId: string, config
 export function listModelsFor(
   token: string,
   projectId: string,
-  params: { provider: string; api_key: string },
+  params: { provider: string; api_key: string; api_secret?: string; region?: string },
 ) {
   return apiRequest<LlmModelOption[]>(
     `/api/v1/admin/projects/${projectId}/llm_provider_configs/models`,

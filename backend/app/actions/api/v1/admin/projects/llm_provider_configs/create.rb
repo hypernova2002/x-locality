@@ -17,6 +17,8 @@ module Backend
                   optional(:description).maybe(:string)
                   optional(:model).maybe(:string)
                   optional(:api_key).maybe(:string)
+                  optional(:api_secret).maybe(:string)
+                  optional(:region).maybe(:string)
                 end
 
                 def handle(request, response)
@@ -31,7 +33,9 @@ module Backend
                     provider: request.params[:provider],
                     description: request.params[:description],
                     model: request.params[:model],
-                    api_key: request.params[:api_key]
+                    api_key: request.params[:api_key],
+                    api_secret: request.params[:api_secret],
+                    region: request.params[:region]
                   )
 
                   case result

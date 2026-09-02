@@ -30,6 +30,19 @@ RSpec.describe Backend::LlmProviderConfigs::Create do
       expect(config.api_key).to eq('sk-gemini-secret')
     end
 
+    it 'sets api_secret and region for AWS-backed providers' do
+      project = create(:project)
+
+      config = described_class.new.call(
+        project: project, name: 'Bedrock key', provider: 'bedrock', model: 'anthropic.claude-sonnet-5',
+        api_key: 'AKIAEXAMPLE', api_secret: 'aws-secret', region: 'us-east-1'
+      ).value!
+
+      expect(config.api_key).to eq('AKIAEXAMPLE')
+      expect(config.api_secret).to eq('aws-secret')
+      expect(config.region).to eq('us-east-1')
+    end
+
     it 'allows two configs with the same provider/model but different keys' do
       project = create(:project)
       described_class.new.call(project: project, name: 'Key A', provider: 'anthropic', model: 'claude-opus-5')

@@ -6,7 +6,11 @@ A project needs an LLM provider configured before it can generate any translatio
 
 Under **Settings → LLM Providers**, you can save multiple provider/model/API-key combinations for a project and switch which one is active without re-entering credentials each time — useful for keeping a cheaper model around alongside a higher-quality one, or switching providers without losing your saved configuration.
 
-Click **New Config**, choose a provider (Anthropic or Gemini), paste an API key, and use **Fetch models** to pull the list of models actually available to that key. Give the config a name so it's identifiable in the list (e.g. "Prod Anthropic key").
+Click **New Config**, choose a provider, paste credentials, and (where applicable) use **Fetch models** to pull the list of models actually available to them. Give the config a name so it's identifiable in the list (e.g. "Prod Anthropic key").
+
+Anthropic, OpenAI, and Gemini take a single API key. Amazon Bedrock and Amazon Translate are AWS services, so they instead take an access key ID, secret access key, and region.
+
+Amazon Translate is a plain translation service, not an LLM — it's typically cheaper and faster, but it can't take glossary terms or context tags into account the way the other providers can, since those work by adding instructions to a prompt and Translate has no prompt. It also has no models to choose from, so the model field doesn't apply to it.
 
 <!-- screenshot: LLM provider config list with active badge -->
 

@@ -45,5 +45,23 @@ RSpec.describe Backend::LlmProviderConfigs::Update do
 
       expect(config.reload.api_key).to be_nil
     end
+
+    it 'sets api_secret and region' do
+      config = create(:llm_provider_config, provider: 'bedrock')
+
+      described_class.new.call(config: config, updates: { api_secret: 'aws-secret', region: 'us-east-1' })
+
+      expect(config.reload.api_secret).to eq('aws-secret')
+      expect(config.region).to eq('us-east-1')
+    end
+
+    it 'leaves api_secret untouched when absent from updates' do
+      config = create(:llm_provider_config, provider: 'bedrock')
+      described_class.new.call(config: config, updates: { api_secret: 'aws-secret' })
+
+      described_class.new.call(config: config, updates: { name: 'Renamed' })
+
+      expect(config.reload.api_secret).to eq('aws-secret')
+    end
   end
 end

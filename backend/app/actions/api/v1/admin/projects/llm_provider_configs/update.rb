@@ -18,6 +18,8 @@ module Backend
                   optional(:provider).filled(:string)
                   optional(:model).maybe(:string)
                   optional(:api_key).maybe(:string)
+                  optional(:api_secret).maybe(:string)
+                  optional(:region).maybe(:string)
                 end
 
                 def handle(request, response)
@@ -32,7 +34,8 @@ module Backend
                                                     detail: 'LLM provider config not found')
                   end
 
-                  updates = request.params.to_h.slice(:name, :description, :provider, :model, :api_key)
+                  updates = request.params.to_h.slice(:name, :description, :provider, :model, :api_key, :api_secret,
+                                                      :region)
                   result = Backend::LlmProviderConfigs::Update.new.call(config: config, updates: updates)
 
                   case result

@@ -79,7 +79,9 @@ export interface LlmProviderConfig {
   description: string | null
   provider: string
   model: string | null
+  region: string | null
   api_key_configured: boolean
+  api_secret_configured: boolean
   created_at: string
   updated_at: string
 }

@@ -76,7 +76,10 @@ const statusOptions = computed(() => [
 
 const providerOptions = [
   { label: 'Anthropic', value: 'anthropic' },
+  { label: 'OpenAI', value: 'openai' },
   { label: 'Gemini', value: 'gemini' },
+  { label: 'Amazon Bedrock', value: 'bedrock' },
+  { label: 'Amazon Translate', value: 'aws_translate' },
 ]
 
 const lockedOptions = computed(() => [

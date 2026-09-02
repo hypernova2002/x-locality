@@ -49,6 +49,11 @@ gem 'openai', '~> 0.1'
 # Gemini has no official Ruby SDK; ruby-gemini-api is actively maintained
 # (monthly releases) and only needs Faraday - no native library deps.
 gem 'ruby-gemini-api', '~> 1.3'
+# Amazon Bedrock (multi-model LLM access) and Amazon Translate (plain NMT,
+# not an LLM - see TranslateAdapter).
+gem 'aws-sdk-bedrock', '~> 1.0'
+gem 'aws-sdk-bedrockruntime', '~> 1.0'
+gem 'aws-sdk-translate', '~> 1.0'
 
 group :development do
   gem 'hanami-webconsole', '~> 3.0.0'
