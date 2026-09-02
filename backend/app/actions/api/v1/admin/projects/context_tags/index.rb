@@ -12,6 +12,7 @@ module Backend
                   required(:project_id).filled(:string)
                   optional(:offset).maybe(:integer, gteq?: 0)
                   optional(:limit).maybe(:integer, gteq?: 1, lteq?: 100)
+                  optional(:search).maybe(:string)
                 end
 
                 def handle(request, response)
@@ -20,7 +21,10 @@ module Backend
                                                     errors: request.params.errors.to_h)
                   end
 
-                  tags, total = paginate(project(request).context_tags_dataset.order(:key), request)
+                  dataset = Backend::ContextTags::List.new.call(
+                    project: project(request), search: request.params[:search]
+                  ).value!
+                  tags, total = paginate(dataset, request)
 
                   response.headers['X-Total-Count'] = total.to_s
                   response.format = :json

@@ -12,6 +12,9 @@ module Backend
                   required(:project_id).filled(:string)
                   optional(:offset).maybe(:integer, gteq?: 0)
                   optional(:limit).maybe(:integer, gteq?: 1, lteq?: 100)
+                  optional(:key).maybe(:string)
+                  optional(:language).maybe(:string)
+                  optional(:system).maybe(:string)
                 end
 
                 def handle(request, response)
@@ -20,7 +23,11 @@ module Backend
                                                     errors: request.params.errors.to_h)
                   end
 
-                  locales, total = paginate(project(request).locales_dataset.order(:key), request)
+                  dataset = Backend::Locales::List.new.call(
+                    project: project(request), key_filter: request.params[:key],
+                    language_filter: request.params[:language], system_filter: request.params[:system]
+                  ).value!
+                  locales, total = paginate(dataset, request)
 
                   response.headers['X-Total-Count'] = total.to_s
                   response.format = :json

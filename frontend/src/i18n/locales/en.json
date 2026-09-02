@@ -135,6 +135,11 @@
   },
   "locales": {
     "systemNote": "System locales (seeded ISO languages) are read-only and can't be edited or deleted.",
+    "filterKey": "Key contains",
+    "filterLanguage": "Target language",
+    "filterSystem": "Type",
+    "filterSystemOnly": "System only",
+    "filterCustomOnly": "Custom only",
     "newLocale": "New Locale",
     "empty": "No locales yet.",
     "system": "system",
@@ -191,6 +196,7 @@
   },
   "contextTags": {
     "description": "Tags you can attach to a translation request to steer the LLM (e.g. \"fruit\" vs \"brand\" for the same source word).",
+    "filterSearch": "Search key or description",
     "newTag": "New Tag",
     "empty": "No context tags yet.",
     "edit": "Edit",
@@ -231,6 +237,9 @@
   },
   "glossaryTerms": {
     "description": "Mandated term translations, automatically applied whenever the source text contains them - for brand names, technical jargon, or terms with one company-approved translation.",
+    "filterSearch": "Search source or target term",
+    "filterSourceLanguage": "Source language",
+    "filterTargetLocale": "Target locale",
     "newTerm": "New Term",
     "empty": "No glossary terms yet.",
     "allLocales": "All locales",

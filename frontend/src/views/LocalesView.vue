@@ -16,6 +16,7 @@ import { useToast } from 'openvue/usetoast'
 import { useConfirm } from 'openvue/useconfirm'
 import { useAuthStore } from '@/stores/auth'
 import { useProject } from '@/composables/useProject'
+import { useListFilters } from '@/composables/useListFilters'
 import * as localesApi from '@/api/locales'
 import { ApiError } from '@/api/client'
 import { arrayBufferToBase64 } from '@/lib/base64'
@@ -35,13 +36,28 @@ const loading = ref(true)
 const first = ref(0)
 const total = ref(0)
 
-async function loadLocales() {
+const { filters, showFilters, syncQuery, toParams } = useListFilters({
+  key: '',
+  language: '',
+  system: '',
+})
+
+const systemOptions = computed(() => [
+  { label: t('locales.filterSystemOnly'), value: 'true' },
+  { label: t('locales.filterCustomOnly'), value: 'false' },
+])
+
+async function loadLocales(resetPage = true) {
+  if (resetPage) {
+    first.value = 0
+    syncQuery()
+  }
   loading.value = true
 
   const { locales: page, total: count } = await localesApi.listLocales(
     auth.token!,
     project.value!.id,
-    { offset: first.value, limit: PAGE_SIZE },
+    { offset: first.value, limit: PAGE_SIZE, ...toParams() },
   )
   locales.value = page
   total.value = count
@@ -51,12 +67,12 @@ async function loadLocales() {
 
 function onPageChange(event: { first: number }) {
   first.value = event.first
-  loadLocales()
+  loadLocales(false)
 }
 
 async function reloadFirstPage() {
   first.value = 0
-  await loadLocales()
+  await loadLocales(false)
 }
 
 onMounted(loadLocales)
@@ -327,9 +343,18 @@ async function handleBulkTranslate() {
 <template>
   <div>
     <div class="mb-4 flex items-center justify-between">
-      <p class="text-sm text-[var(--p-text-muted-color)]">
-        {{ t('locales.systemNote') }}
-      </p>
+      <div class="flex items-center gap-3">
+        <p class="text-sm text-[var(--p-text-muted-color)]">
+          {{ t('locales.systemNote') }}
+        </p>
+        <Button
+          :label="showFilters ? t('translations.hideFilters') : t('translations.filters')"
+          text
+          severity="secondary"
+          icon="oi oi-filter"
+          @click="showFilters = !showFilters"
+        />
+      </div>
       <div class="flex items-center gap-2">
         <Button
           :label="t('locales.export')"
@@ -349,6 +374,39 @@ async function handleBulkTranslate() {
           @click="openImportModal"
         />
         <Button :label="t('locales.newLocale')" icon="oi oi-plus" @click="openCreateModal" />
+      </div>
+    </div>
+
+    <div
+      v-if="showFilters"
+      class="mb-4 grid grid-cols-1 gap-3 rounded-lg border border-[var(--p-content-border-color)] bg-[var(--p-content-background)] p-4 sm:grid-cols-3"
+    >
+      <div>
+        <label class="mb-1 block text-xs text-[var(--p-text-muted-color)]">{{
+          t('locales.filterKey')
+        }}</label>
+        <InputText v-model="filters.key" fluid @keydown.enter="loadLocales()" />
+      </div>
+      <div>
+        <label class="mb-1 block text-xs text-[var(--p-text-muted-color)]">{{
+          t('locales.filterLanguage')
+        }}</label>
+        <InputText v-model="filters.language" fluid @keydown.enter="loadLocales()" />
+      </div>
+      <div>
+        <label class="mb-1 block text-xs text-[var(--p-text-muted-color)]">{{
+          t('locales.filterSystem')
+        }}</label>
+        <Select
+          v-model="filters.system"
+          :options="systemOptions"
+          option-label="label"
+          option-value="value"
+          show-clear
+          :placeholder="t('common.any')"
+          fluid
+          @update:model-value="loadLocales()"
+        />
       </div>
     </div>
 

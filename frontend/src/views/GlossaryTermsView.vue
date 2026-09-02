@@ -14,6 +14,7 @@ import { useToast } from 'openvue/usetoast'
 import { useConfirm } from 'openvue/useconfirm'
 import { useAuthStore } from '@/stores/auth'
 import { useProject } from '@/composables/useProject'
+import { useListFilters } from '@/composables/useListFilters'
 import * as glossaryTermsApi from '@/api/glossaryTerms'
 import * as localesApi from '@/api/locales'
 import { ApiError } from '@/api/client'
@@ -35,13 +36,23 @@ const loading = ref(true)
 const first = ref(0)
 const total = ref(0)
 
-async function loadTerms() {
+const { filters, showFilters, syncQuery, toParams } = useListFilters({
+  search: '',
+  source_language: '',
+  target_locale: '',
+})
+
+async function loadTerms(resetPage = true) {
+  if (resetPage) {
+    first.value = 0
+    syncQuery()
+  }
   loading.value = true
 
   const { terms: page, total: count } = await glossaryTermsApi.listGlossaryTerms(
     auth.token!,
     project.value!.id,
-    { offset: first.value, limit: PAGE_SIZE },
+    { offset: first.value, limit: PAGE_SIZE, ...toParams() },
   )
   terms.value = page
   total.value = count
@@ -51,12 +62,12 @@ async function loadTerms() {
 
 function onPageChange(event: { first: number }) {
   first.value = event.first
-  loadTerms()
+  loadTerms(false)
 }
 
 async function reloadFirstPage() {
   first.value = 0
-  await loadTerms()
+  await loadTerms(false)
 }
 
 const localeOptions = ref<{ label: string; value: string }[]>([])
@@ -287,9 +298,18 @@ async function handleImport() {
 <template>
   <div>
     <div class="mb-4 flex items-center justify-between">
-      <p class="text-sm text-[var(--p-text-muted-color)]">
-        {{ t('glossaryTerms.description') }}
-      </p>
+      <div class="flex items-center gap-3">
+        <p class="text-sm text-[var(--p-text-muted-color)]">
+          {{ t('glossaryTerms.description') }}
+        </p>
+        <Button
+          :label="showFilters ? t('translations.hideFilters') : t('translations.filters')"
+          text
+          severity="secondary"
+          icon="oi oi-filter"
+          @click="showFilters = !showFilters"
+        />
+      </div>
       <div class="flex items-center gap-2">
         <Button
           :label="t('glossaryTerms.export')"
@@ -309,6 +329,39 @@ async function handleImport() {
           @click="openImportModal"
         />
         <Button :label="t('glossaryTerms.newTerm')" icon="oi oi-plus" @click="openCreateModal" />
+      </div>
+    </div>
+
+    <div
+      v-if="showFilters"
+      class="mb-4 grid grid-cols-1 gap-3 rounded-lg border border-[var(--p-content-border-color)] bg-[var(--p-content-background)] p-4 sm:grid-cols-3"
+    >
+      <div>
+        <label class="mb-1 block text-xs text-[var(--p-text-muted-color)]">{{
+          t('glossaryTerms.filterSearch')
+        }}</label>
+        <InputText v-model="filters.search" fluid @keydown.enter="loadTerms()" />
+      </div>
+      <div>
+        <label class="mb-1 block text-xs text-[var(--p-text-muted-color)]">{{
+          t('glossaryTerms.filterSourceLanguage')
+        }}</label>
+        <InputText v-model="filters.source_language" fluid @keydown.enter="loadTerms()" />
+      </div>
+      <div>
+        <label class="mb-1 block text-xs text-[var(--p-text-muted-color)]">{{
+          t('glossaryTerms.filterTargetLocale')
+        }}</label>
+        <Select
+          v-model="filters.target_locale"
+          :options="localeOptions"
+          option-label="label"
+          option-value="value"
+          show-clear
+          :placeholder="t('common.any')"
+          fluid
+          @update:model-value="loadTerms()"
+        />
       </div>
     </div>
 

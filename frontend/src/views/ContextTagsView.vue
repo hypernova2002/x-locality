@@ -15,6 +15,7 @@ import { useToast } from 'openvue/usetoast'
 import { useConfirm } from 'openvue/useconfirm'
 import { useAuthStore } from '@/stores/auth'
 import { useProject } from '@/composables/useProject'
+import { useListFilters } from '@/composables/useListFilters'
 import * as contextTagsApi from '@/api/contextTags'
 import { ApiError } from '@/api/client'
 import { arrayBufferToBase64 } from '@/lib/base64'
@@ -34,13 +35,19 @@ const loading = ref(true)
 const first = ref(0)
 const total = ref(0)
 
-async function loadTags() {
+const { filters, showFilters, syncQuery, toParams } = useListFilters({ search: '' })
+
+async function loadTags(resetPage = true) {
+  if (resetPage) {
+    first.value = 0
+    syncQuery()
+  }
   loading.value = true
 
   const { tags: page, total: count } = await contextTagsApi.listContextTags(
     auth.token!,
     project.value!.id,
-    { offset: first.value, limit: PAGE_SIZE },
+    { offset: first.value, limit: PAGE_SIZE, ...toParams() },
   )
   tags.value = page
   total.value = count
@@ -50,12 +57,12 @@ async function loadTags() {
 
 function onPageChange(event: { first: number }) {
   first.value = event.first
-  loadTags()
+  loadTags(false)
 }
 
 async function reloadFirstPage() {
   first.value = 0
-  await loadTags()
+  await loadTags(false)
 }
 
 onMounted(loadTags)
@@ -248,9 +255,18 @@ async function handleImport() {
 <template>
   <div>
     <div class="mb-4 flex items-center justify-between">
-      <p class="text-sm text-[var(--p-text-muted-color)]">
-        {{ t('contextTags.description') }}
-      </p>
+      <div class="flex items-center gap-3">
+        <p class="text-sm text-[var(--p-text-muted-color)]">
+          {{ t('contextTags.description') }}
+        </p>
+        <Button
+          :label="showFilters ? t('translations.hideFilters') : t('translations.filters')"
+          text
+          severity="secondary"
+          icon="oi oi-filter"
+          @click="showFilters = !showFilters"
+        />
+      </div>
       <div class="flex items-center gap-2">
         <Button
           :label="t('contextTags.export')"
@@ -270,6 +286,18 @@ async function handleImport() {
           @click="openImportModal"
         />
         <Button :label="t('contextTags.newTag')" icon="oi oi-plus" @click="openCreateModal" />
+      </div>
+    </div>
+
+    <div
+      v-if="showFilters"
+      class="mb-4 grid grid-cols-1 gap-3 rounded-lg border border-[var(--p-content-border-color)] bg-[var(--p-content-background)] p-4 sm:grid-cols-3"
+    >
+      <div>
+        <label class="mb-1 block text-xs text-[var(--p-text-muted-color)]">{{
+          t('contextTags.filterSearch')
+        }}</label>
+        <InputText v-model="filters.search" fluid @keydown.enter="loadTags()" />
       </div>
     </div>
 
