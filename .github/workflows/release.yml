@@ -17,6 +17,7 @@ jobs:
       contents: read
       packages: write
     strategy:
+      fail-fast: false
       matrix:
         include:
           - image: backend
@@ -65,8 +66,12 @@ jobs:
       # Syncs the Docker Hub repo's overview page (description + full
       # README) from the file committed alongside each Dockerfile, so it
       # stays current every release instead of drifting from a manually
-      # edited web-UI copy.
+      # edited web-UI copy. continue-on-error: this needs a Docker Hub
+      # token with read/write/delete scope specifically - read/write
+      # (enough for the image push above) isn't enough for it. A sync
+      # failure here shouldn't fail the actual image release.
       - uses: peter-evans/dockerhub-description@v5
+        continue-on-error: true
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
