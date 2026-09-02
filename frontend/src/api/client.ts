@@ -1,6 +1,16 @@
 import type { ProblemDetails } from './types'
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL
+// The published production image bakes no API URL into the build - it's
+// injected at container startup (see docker/frontend/config.template.js)
+// via window.__APP_CONFIG__, read here before falling back to the
+// build-time Vite env var used in local dev.
+declare global {
+  interface Window {
+    __APP_CONFIG__?: { apiBaseUrl?: string }
+  }
+}
+
+const BASE_URL = window.__APP_CONFIG__?.apiBaseUrl || import.meta.env.VITE_API_BASE_URL
 
 export class ApiError extends Error {
   status: number

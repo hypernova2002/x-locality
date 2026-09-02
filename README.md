@@ -81,6 +81,23 @@ Rebuild images after changing the `Gemfile` or `Dockerfile`:
 docker compose build
 ```
 
+## Production images
+
+Pushing a semver-formatted git tag (e.g. `v1.2.3`) builds `backend/Dockerfile.production` and `frontend/Dockerfile.production` and publishes both to GHCR and Docker Hub (see `.github/workflows/release.yml`):
+
+- `ghcr.io/<owner>/x-locality-backend:1.2.3` / `docker.io/<dockerhub-username>/x-locality-backend:1.2.3` (both also tagged `latest`) — serves as the `api`; override the command (`bundle exec sidekiq -r ./config/boot.rb`) to run the same image as the `worker` instead. Needs the same required env vars as local dev (`DATABASE_URL`, `SIDEKIQ_REDIS_URL`, `RACK_ATTACK_REDIS_URL`, `JWT_SECRET`, `ENCRYPTION_KEY` — see `docker-compose.example.yml`), pointed at real infrastructure instead of the dev containers.
+- `ghcr.io/<owner>/x-locality-frontend:1.2.3` / `docker.io/<dockerhub-username>/x-locality-frontend:1.2.3` — nginx serving the built static app. The API URL is read at container *start*, not baked into the build, so the same image works against any backend:
+
+  ```bash
+  docker run -p 80:80 -e API_BASE_URL=https://api.your-domain.com ghcr.io/<owner>/x-locality-frontend:1.2.3
+  ```
+
+GHCR needs no setup (uses the workflow's own `GITHUB_TOKEN`). Docker Hub publishing needs two repo secrets first — **Settings → Secrets and variables → Actions**: `DOCKERHUB_USERNAME` (your Docker Hub username) and `DOCKERHUB_TOKEN` (an access token from Docker Hub's **Account Settings → Security**, not your account password). Without these two secrets set, the release workflow fails at the Docker Hub login step.
+
+These two `Dockerfile.production` files are separate from `backend/Dockerfile`/`frontend/Dockerfile`, which `docker compose` uses for local dev (live reload, dev/test gem groups included on the backend, Vite's dev server on the frontend rather than a `vite build` served by nginx) — don't edit one expecting it to affect the other.
+
+Everything past "the app boots and serves traffic" — secrets management, TLS termination, an actual Postgres/Redis you administer, error tracking, a deploy pipeline beyond publishing the image — is left to whoever is running this in production; it's out of scope for the repo itself.
+
 ## Project structure
 
 ```
@@ -88,6 +105,8 @@ x-locality/
   docker-compose.example.yml   # tracked template — copy to docker-compose.yml
   docker-compose.yml           # your local copy with real secrets (gitignored)
   backend/                     # Hanami API (Ruby 4.0, Sequel, Postgres)
+    Dockerfile                  # Local dev image (docker compose)
+    Dockerfile.production        # Published release image - see "Production images" below
     config/
       app.rb                   # middleware (Rack::Attack, openapi-ruby validation)
       routes.rb                # api/v1 (API-key auth) and admin/v1 (JWT auth) scopes
@@ -99,6 +118,9 @@ x-locality/
     spec/requests/                # HTTP-level specs that generate the OpenAPI spec (bundle exec rake openapi_ruby:generate)
     openapi/                     # Generated OpenAPI spec (committed - served live at /api-docs)
   frontend/                    # Vue UI (Vite, TypeScript, openvue components)
+    Dockerfile                  # Local dev image (docker compose) - Vite dev server
+    Dockerfile.production        # Published release image - vite build, served by nginx
+    docker/                       # nginx config + runtime API-URL injection for the above
   docs/                        # User guide (VitePress) - see docs/README.md
 ```
 
