@@ -1,0 +1,356 @@
+---
+openapi: 3.1.0
+info:
+  title: XLocality API
+  version: v1
+  description: External, API-key-authenticated translation API. The admin UI's own
+    JWT-authenticated endpoints are not part of this document.
+paths:
+  "/translations":
+    post:
+      summary: Create or fetch translations
+      tags:
+      - Translations
+      security:
+      - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              "$ref": "#/components/schemas/CreateTranslationsRequest"
+      responses:
+        '200':
+          description: returns a cached translation without calling the LLM
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/TranslationCreateResult"
+        '401':
+          description: missing or invalid API key
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ProblemDetails"
+        '422':
+          description: request body fails validation
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ValidationProblemDetails"
+        '400':
+          "$ref": "#/components/responses/SchemaValidationError"
+    get:
+      summary: List translations
+      tags:
+      - Translations
+      parameters:
+      - name: locale
+        in: query
+        schema:
+          type: string
+        required: false
+        description: Filter to a single locale key.
+      - name: key
+        in: query
+        schema:
+          type: string
+        required: false
+        description: Filter to keys containing this substring.
+      - name: after
+        in: query
+        schema:
+          type: integer
+        required: false
+        description: 'Cursor: return records with an id greater than this.'
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 200
+        required: false
+        description: Defaults to 50.
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: returns matching translations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Translation"
+        '401':
+          description: missing or invalid API key
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ProblemDetails"
+        '422':
+          description: limit is out of range
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ValidationProblemDetails"
+        '400':
+          "$ref": "#/components/responses/SchemaValidationError"
+  "/translations/{key}":
+    parameters:
+    - name: key
+      in: path
+      schema:
+        type: string
+      required: true
+    get:
+      summary: Fetch all locale variants for a key
+      tags:
+      - Translations
+      security:
+      - BearerAuth: []
+      responses:
+        '200':
+          description: returns every locale for the key
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Translation"
+        '401':
+          description: missing or invalid API key
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ProblemDetails"
+        '404':
+          description: no translations exist for this key
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ProblemDetails"
+        '400':
+          "$ref": "#/components/responses/SchemaValidationError"
+servers:
+- url: "/api/v1"
+components:
+  schemas:
+    CreateTranslationsRequest:
+      type: object
+      required:
+      - target_locales
+      - items
+      properties:
+        target_locales:
+          type: array
+          items:
+            type: string
+          description: Locale keys already defined in the project.
+        items:
+          type: array
+          items:
+            "$ref": "#/components/schemas/TranslationItem"
+      title: CreateTranslationsRequest
+    ProblemDetails:
+      type: object
+      required:
+      - type
+      - title
+      - status
+      properties:
+        type:
+          type: string
+          description: Always "about:blank" - no distinct problem types are defined.
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+      title: ProblemDetails
+    Translation:
+      type: object
+      required:
+      - id
+      - key
+      - source_text
+      - source_language
+      - detected_language
+      - translated_text
+      - status
+      - generated_by
+      - llm_provider
+      - model_used
+      - locale
+      - context_tags
+      - created_at
+      - updated_at
+      properties:
+        id:
+          type: string
+          description: Public identifier, e.g. "tran_abc123".
+        key:
+          type: string
+        source_text:
+          type: string
+        source_language:
+          type:
+          - string
+          - 'null'
+        detected_language:
+          type:
+          - string
+          - 'null'
+        translated_text:
+          type:
+          - string
+          - 'null'
+        status:
+          type: string
+          enum:
+          - pending
+          - completed
+          - failed
+        generated_by:
+          type: string
+          enum:
+          - llm
+          - user
+        llm_provider:
+          type:
+          - string
+          - 'null'
+        model_used:
+          type:
+          - string
+          - 'null'
+        locale:
+          type: string
+          description: The locale key this translation belongs to.
+        context_tags:
+          type: array
+          items:
+            type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+      title: Translation
+    TranslationCreateResult:
+      type: object
+      required:
+      - key
+      - translations
+      properties:
+        key:
+          type: string
+        translations:
+          type: array
+          items:
+            "$ref": "#/components/schemas/TranslationOutcome"
+      title: TranslationCreateResult
+    TranslationItem:
+      type: object
+      required:
+      - key
+      - source_text
+      properties:
+        key:
+          type: string
+          pattern: "^[a-zA-Z0-9_-]+$"
+          description: Stable identifier for this translation, reused across calls
+            to update it. Used directly in URLs (GET /translations/{key}), so it's
+            restricted to characters safe there.
+        source_text:
+          type: string
+        source_language:
+          type: string
+          description: Optional; enables glossary term matching for this item.
+        context:
+          type: array
+          items:
+            type: string
+          description: Context tag keys, already defined in the project, to steer
+            the translation.
+      title: TranslationItem
+    TranslationOutcome:
+      type: object
+      required:
+      - locale
+      - status
+      - translated_text
+      - detected_language
+      - cached
+      properties:
+        locale:
+          type: string
+        status:
+          type: string
+          enum:
+          - completed
+          - failed
+        translated_text:
+          type:
+          - string
+          - 'null'
+        detected_language:
+          type:
+          - string
+          - 'null'
+        cached:
+          type: boolean
+          description: True if an unchanged, already-completed translation was returned
+            without calling the LLM.
+      title: TranslationOutcome
+    ValidationProblemDetails:
+      type: object
+      required:
+      - type
+      - title
+      - status
+      properties:
+        type:
+          type: string
+          description: Always "about:blank" - no distinct problem types are defined.
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        errors:
+          type: object
+          description: Field name(s) mapped to an array of validation failure messages.
+            Nested for array/hash fields, e.g. {"items" => {"0" => {"key" => ["is
+            missing"]}}}.
+          additionalProperties: true
+      title: ValidationProblemDetails
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      description: A project API key, created from the admin UI's Settings > API Keys
+        page.
+  responses:
+    SchemaValidationError:
+      description: Request validation failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              details:
+                type: array
+                items:
+                  type: string
+            required:
+            - error
+            - details
+security: []

@@ -1,48 +1,38 @@
-# frontend
+# Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+Vue 3 admin UI — Vite, TypeScript, Pinia, vue-router, and an [openvue](https://www.npmjs.com/package/openvue) component library (a PrimeVue-v4-compatible set of components). See the [root README](../README.md) for setup and running the full stack — everything here runs via `docker compose`, not host `npm`.
 
-## Recommended IDE Setup
+## Structure
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Recommended Browser Setup
-
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+```
+frontend/
+  src/
+    api/            # One file per resource - thin wrappers around fetch calls to the Hanami admin API
+    components/     # Shared components used across multiple views (AppShell, EmptyState, ...)
+    composables/    # Shared reactive logic (useProject, ...)
+    i18n/           # vue-i18n - all UI strings live in i18n/locales/en.json, not inline in components
+    lib/            # Framework-agnostic helpers (base64, date formatting, localStorage helpers)
+    router/         # vue-router routes
+    stores/         # Pinia stores (auth, account, theme)
+    views/          # One file per route/page
 ```
 
-### Compile and Hot-Reload for Development
+## Conventions
 
-```sh
-npm run dev
+- All user-facing text goes through `i18n/locales/en.json` (`t('...')`), even though only English exists today — keeps strings out of component logic.
+- `dt()`-style semantic CSS custom properties (`--p-text-color`, `--p-content-background`, etc.) for anything that needs to adapt to light/dark mode, rather than hardcoded colors.
+- API calls go through `src/api/*.ts`, never `fetch` directly in a component/view.
+
+## Linting
+
+`npm run lint` (oxlint + eslint) runs automatically on staged files via the repo's Lefthook pre-commit hook (see root README). Run it manually with:
+
+```bash
+docker compose run --rm web npm run lint
 ```
 
-### Type-Check, Compile and Minify for Production
+Type-check with:
 
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
+```bash
+docker compose run --rm web npm run type-check
 ```

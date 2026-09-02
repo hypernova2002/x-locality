@@ -1,10 +1,11 @@
 # XLocality
 
-Translation/localisation API. Ruby/Hanami backend using Sequel for persistence, with a Vue UI to follow. Everything runs in Docker — no Ruby, Postgres, or Redis needs to be installed on your machine.
+Translation/localisation platform: a Hanami 3 (Ruby) API using Sequel for persistence, with a Vue 3 admin UI. Everything runs in Docker — no Ruby, Node, Postgres, or Redis needs to be installed on your machine.
 
 ## Prerequisites
 
 - Docker and Docker Compose (`docker compose version` to check)
+- [Lefthook](https://github.com/evilmartians/lefthook) for the pre-commit lint hook — `brew install lefthook`, then `lefthook install` once after cloning. The hook commands themselves (`rubocop`, `eslint`/`oxlint`) run inside Docker, same as everything else.
 
 ## Setup
 
@@ -33,7 +34,7 @@ This starts:
 
 - `postgres` — Postgres 16, exposed on host port `5433`
 - `redis` — Redis 7, exposed on host port `6380` (Sidekiq uses db 0, rack-attack uses db 1)
-- `api` — the Hanami app at [http://localhost:2300](http://localhost:2300), with live reload (Guard watches `app/`, `config/`, `lib/` and restarts on change — no rebuild needed for code changes)
+- `api` — the Hanami app at [http://localhost:2300](http://localhost:2300), with live reload (Guard watches `app/`, `config/`, `lib/` and restarts on change — no rebuild needed for code changes). Interactive API reference (Swagger UI) at [http://localhost:2300/api-docs](http://localhost:2300/api-docs).
 - `worker` — Sidekiq, processing background translation jobs
 - `web` — the Vue admin UI at [http://localhost:5173](http://localhost:5173)
 - `docs` — the user guide (VitePress) at [http://localhost:5174](http://localhost:5174), live-reloading as you edit files under `docs/`
@@ -66,6 +67,12 @@ docker compose run --rm api bundle exec rspec
 # Add a gem: edit backend/Gemfile, then
 docker compose run --rm api bundle install
 docker compose build api worker   # picks up the new Gemfile.lock in the image
+
+# Regenerate the OpenAPI spec (backend/openapi/public_api.yaml) after editing
+# a spec/requests/**/*_spec.rb file - it's committed, not built on deploy, so
+# this has to be run and the result committed whenever a documented endpoint
+# changes.
+docker compose run --rm api bundle exec rake openapi_ruby:generate
 ```
 
 Rebuild images after changing the `Gemfile` or `Dockerfile`:
@@ -82,11 +89,15 @@ x-locality/
   docker-compose.yml           # your local copy with real secrets (gitignored)
   backend/                     # Hanami API (Ruby 4.0, Sequel, Postgres)
     config/
-      app.rb                   # middleware (Rack::Attack)
+      app.rb                   # middleware (Rack::Attack, openapi-ruby validation)
       routes.rb                # api/v1 (API-key auth) and admin/v1 (JWT auth) scopes
       settings.rb               # all config sourced from environment variables
       providers/                 # db, sidekiq, rack_attack setup
+      openapi_ruby.rb            # OpenAPI schema/validation config - see Documentation below
+      api_components/            # OpenAPI schema components (Ruby classes)
     db/migrate/                  # Sequel migrations
+    spec/requests/                # HTTP-level specs that generate the OpenAPI spec (bundle exec rake openapi_ruby:generate)
+    openapi/                     # Generated OpenAPI spec (committed - served live at /api-docs)
   frontend/                    # Vue UI (Vite, TypeScript, openvue components)
   docs/                        # User guide (VitePress) - see docs/README.md
 ```
@@ -94,3 +105,5 @@ x-locality/
 ## Documentation
 
 The user guide lives in `docs/` (VitePress) and is deployed to GitHub Pages on every push to `main` that touches it (see `.github/workflows/deploy-docs.yml`). See [`docs/README.md`](docs/README.md) for how to write pages and add screenshots.
+
+The external, API-key-authenticated surface (`/api/v1/translations`) has an OpenAPI 3.1 reference, generated with [openapi-ruby](https://github.com/openapi-ruby/openapi-ruby) from `backend/spec/requests/**/*_spec.rb` and served live at `/api-docs` (Swagger UI) by the `api` service itself. Runtime request/response validation is also enabled for that same path prefix, so a mismatch between the spec and the actual behavior fails loudly (400/500) rather than drifting silently. It does not cover `/api/v1/admin/*`, which is internal to the Vue admin UI.

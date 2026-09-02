@@ -4,6 +4,8 @@ module Backend
   class Routes < Hanami::Routes
     get '/health', to: ->(_env) { [200, { 'Content-Type' => 'text/plain' }, ['OK']] }
 
+    mount OpenapiRuby::RackApp, at: '/api-docs'
+
     scope 'api/v1' do
       # Translation API (API-key auth) - server-to-server, no CORS.
       post '/translations', to: 'api.v1.translations.create'

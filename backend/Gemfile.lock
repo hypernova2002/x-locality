@@ -149,6 +149,7 @@ GEM
       guard (~> 2.14)
       guard-compat (~> 1.2)
       puma (>= 4.0, < 9)
+    hana (1.3.7)
     hanami (3.0.2)
       bundler (>= 2.0)
       dry-configurable (~> 1.0, >= 1.2.0, < 2)
@@ -209,6 +210,11 @@ GEM
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     json (2.21.2)
+    json_schemer (2.5.0)
+      bigdecimal
+      hana (~> 1.3)
+      regexp_parser (~> 2.0)
+      simpleidn (~> 0.2)
     jwt (2.10.3)
       base64
     language_server-protocol (3.17.0.6)
@@ -252,6 +258,10 @@ GEM
     openai (0.83.0)
       connection_pool (>= 2.2.3)
       logger
+    openapi-ruby (4.2.0)
+      activesupport (>= 7.0)
+      json_schemer (~> 2.4)
+      rack (>= 2.0)
     pagy (43.6.2)
       json
       uri
@@ -288,6 +298,8 @@ GEM
     rack-session (2.1.2)
       base64 (>= 0.1.0)
       rack (>= 3.0.0)
+    rack-test (2.2.0)
+      rack (>= 1.3)
     rackup (2.3.1)
       rack (>= 3)
     rainbow (3.1.1)
@@ -357,6 +369,7 @@ GEM
       logger (>= 1.7.0)
       rack (>= 3.2.0)
       redis-client (>= 0.29.0)
+    simpleidn (0.3.0)
     standardwebhooks (1.1.0)
     strscan (3.1.8)
     thor (1.5.0)
@@ -415,11 +428,13 @@ DEPENDENCIES
   jwt (~> 2.9)
   mail (~> 2.8)
   openai (~> 0.1)
+  openapi-ruby (~> 4.2)
   pagy (~> 43.5)
   pg (~> 1.5)
   puma (>= 7.1)
   rack-attack (~> 6.7)
   rack-cors (~> 3.0)
+  rack-test (~> 2.2)
   rake
   redis (~> 5.3)
   rubocop (~> 1.81)
@@ -489,6 +504,7 @@ CHECKSUMS
   guard (2.20.2) sha256=2d0574d35619669f2f71739a0313290810b9cf66b2263f5d97e815fcce598d4d
   guard-compat (1.2.1) sha256=3ad21ab0070107f92edfd82610b5cdc2fb8e368851e72362ada9703443d646fe
   guard-puma (0.10.0) sha256=15d9e5621113b6fdf0f605677615d51038520640cd70e242d9e14d565ade5c31
+  hana (1.3.7) sha256=5425db42d651fea08859811c29d20446f16af196308162894db208cac5ce9b0d
   hanami (3.0.2) sha256=4fb9180c24fb1edd8932efc71848e9fe2e41e366286a0bf59a7938904a194e2b
   hanami-action (3.0.1) sha256=cacef6a80e366a0c9c3666dfd83365f3c07ac96bd7be444ceecd62df1488451d
   hanami-cli (3.0.0) sha256=9d51bb7b0f0b4eaf67ea1dc8b27774428ee831647b107d2e9f6ad3317b1598ec
@@ -502,6 +518,7 @@ CHECKSUMS
   io-console (0.9.2) sha256=efa74f891dd03c0939a931dfc6e74c2813d904763d456ea9762b0525e748db08
   irb (1.18.0) sha256=de9454a0703a54704b9811a5ef31a60c86949fbf4013fcf244fabc7c775248e3
   json (2.21.2) sha256=1f1d3b7cf2b3ba1a69beca0bb6db13d5438b80bff3cd54cdaaa620b9b07c1c6a
+  json_schemer (2.5.0) sha256=2f01fb4cce721a4e08dd068fc2030cffd0702a7f333f1ea2be6e8991f00ae396
   jwt (2.10.3) sha256=e4d9352fbc7309b1a7448c7dd713dfe4d8c47077af80759cdbed8f878ea0b484
   language_server-protocol (3.17.0.6) sha256=5ef2c0c138f8267e1bc631d3328347d354f96724b0af22f2c79516120443b7f0
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
@@ -524,6 +541,7 @@ CHECKSUMS
   nio4r (2.7.5) sha256=6c90168e48fb5f8e768419c93abb94ba2b892a1d0602cb06eef16d8b7df1dca1
   notiffany (0.1.3) sha256=d37669605b7f8dcb04e004e6373e2a780b98c776f8eb503ac9578557d7808738
   openai (0.83.0) sha256=2d94f33183a2e2486a108cff97e10966054e824600d4cee8c2a49aca53c5c4b6
+  openapi-ruby (4.2.0) sha256=11ca5aa6ab6e2dddb6028dc66545bd5e804440f4ddbdf05f60a2e54407d0438a
   pagy (43.6.2) sha256=b1d461b6bb43ce410ed2b9f09ce2a90430fa804265d167207a30337ea45c1dd3
   parallel (2.1.0) sha256=b35258865c2e31134c5ecb708beaaf6772adf9d5efae28e93e99260877b09356
   parser (3.3.12.0) sha256=21a6d7f755d5a24dfbdc6e6b772e4e879a52e7631a88bc5a3a134606052c9828
@@ -545,6 +563,7 @@ CHECKSUMS
   rack-attack (6.8.0) sha256=f2499fdebf85bcc05573a22dff57d24305ac14ec2e4156cd3c28d47cafeeecf2
   rack-cors (3.0.0) sha256=7b95be61db39606906b61b83bd7203fa802b0ceaaad8fcb2fef39e097bf53f68
   rack-session (2.1.2) sha256=595434f8c0c3473ae7d7ac56ecda6cc6dfd9d37c0b2b5255330aa1576967ffe8
+  rack-test (2.2.0) sha256=005a36692c306ac0b4a9350355ee080fd09ddef1148a5f8b2ac636c720f5c463
   rackup (2.3.1) sha256=6c79c26753778e90983761d677a48937ee3192b3ffef6bc963c0950f94688868
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
@@ -571,6 +590,7 @@ CHECKSUMS
   sequel (5.107.0) sha256=019629313205295b007f6df2c5eab19ddc40710d549fd445ac300f2853a370db
   shellany (0.0.1) sha256=0e127a9132698766d7e752e82cdac8250b6adbd09e6c0a7fbbb6f61964fedee7
   sidekiq (8.1.7) sha256=91ad48c7e6c32e1846bf1d5b74c27948758049b93fed0cb539f8d586c7de3415
+  simpleidn (0.3.0) sha256=12ca730bed2f3db04d11e9bfd1bca3e11fb37f55b21eb2e9793fb5814bf54d03
   standardwebhooks (1.1.0) sha256=356ba711c14def4fb27310e4163b26bd5cccf325212c3440cabadd825e4be11f
   strscan (3.1.8) sha256=aae2db611a225559f21ffbb71765c9a4e60fd262534a9ea84f4f11c7f32f679e
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73

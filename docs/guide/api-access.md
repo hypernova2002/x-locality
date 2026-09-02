@@ -2,6 +2,8 @@
 
 Applications integrate with XLocality through a separate, API-key-authenticated API — distinct from the admin UI you use in the browser, which is authenticated by your login session instead.
 
+An interactive OpenAPI reference (Swagger UI) is served by the API itself at `/api-docs` (e.g. `https://your-xlocality-instance/api-docs`) — it's the fastest way to see exact request/response shapes and try a call directly against your project.
+
 ## Creating an API key
 
 Go to **Settings → API Keys** and click **New API Key**. Give it a descriptive name (e.g. `production`, `ci`) — the key itself is shown once at creation and can be revealed again from the list, copied, revoked, or deleted at any time. Revoking stops it working immediately; deleting removes it entirely.

@@ -8,6 +8,7 @@ ENV['HANAMI_ENV'] ||= 'test'
 ENV['DATABASE_URL'] = ENV.fetch('DATABASE_URL').sub(/x_locality_development\z/, 'x_locality_test')
 
 require 'hanami/prepare'
+require 'openapi_ruby/rspec'
 
 # hanami/prepare sets up the app but leaves providers to start lazily on
 # first container resolution. Every spec touches the DB (directly or via

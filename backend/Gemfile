@@ -34,6 +34,7 @@ gem 'redis', '~> 5.3'
 
 # API concerns
 gem 'alba', '~> 3.6'
+gem 'openapi-ruby', '~> 4.2'
 gem 'pagy', '~> 43.5'
 gem 'rack-attack', '~> 6.7'
 gem 'rack-cors', '~> 3.0'
@@ -64,5 +65,6 @@ end
 
 group :test do
   gem 'factory_bot', '~> 6.4'
+  gem 'rack-test', '~> 2.2'
   gem 'webmock', '~> 3.19'
 end
