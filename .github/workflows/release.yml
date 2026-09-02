@@ -21,8 +21,10 @@ jobs:
         include:
           - image: backend
             context: backend
+            short_description: "Hanami/Ruby API for XLocality, a self-hosted LLM translation platform."
           - image: frontend
             context: frontend
+            short_description: "Vue 3 admin UI for XLocality, a self-hosted LLM translation platform."
     steps:
       - uses: actions/checkout@v4
 
@@ -59,3 +61,15 @@ jobs:
             ghcr.io/${{ steps.meta.outputs.repo }}-${{ matrix.image }}:latest
             docker.io/${{ secrets.DOCKERHUB_USERNAME }}/x-locality-${{ matrix.image }}:${{ steps.meta.outputs.version }}
             docker.io/${{ secrets.DOCKERHUB_USERNAME }}/x-locality-${{ matrix.image }}:latest
+
+      # Syncs the Docker Hub repo's overview page (description + full
+      # README) from the file committed alongside each Dockerfile, so it
+      # stays current every release instead of drifting from a manually
+      # edited web-UI copy.
+      - uses: peter-evans/dockerhub-description@v5
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: ${{ secrets.DOCKERHUB_USERNAME }}/x-locality-${{ matrix.image }}
+          short-description: ${{ matrix.short_description }}
+          readme-filepath: ./${{ matrix.context }}/DOCKERHUB.md
